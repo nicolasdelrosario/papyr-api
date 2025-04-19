@@ -1,4 +1,5 @@
 import type { EncryptionService } from "@auth/domain/services/EncryptionService";
+import { UserAlreadyExists } from "@users/domain/exceptions/UserAlreadyExists";
 import { User } from "@users/domain/model/User";
 import type { UserRepository } from "@users/domain/repository/UserRepository";
 import { UserAvatarUrl } from "@users/domain/value-objects/UserAvatarUrl";
@@ -10,7 +11,6 @@ import { UserName } from "@users/domain/value-objects/UserName";
 import { UserPassword } from "@users/domain/value-objects/UserPassword";
 import { UserUpdatedAt } from "@users/domain/value-objects/UserUpdatedAt";
 import { UserUsername } from "@users/domain/value-objects/UserUsername";
-import { UserAlreadyExists } from "../domain/exceptions/UserAlreadyExists";
 
 export class RegisterUser {
   constructor(
@@ -19,8 +19,8 @@ export class RegisterUser {
   ) {}
 
   async execute(name: string, username: string, email: string, password: string, avatarUrl: string): Promise<void> {
-    const existingById = await this.repository.findByEmail(new UserEmail(email));
-    if (existingById) throw new UserAlreadyExists("User already exists");
+    const existingByEmail = await this.repository.findByEmail(new UserEmail(email));
+    if (existingByEmail) throw new UserAlreadyExists("Email already taken");
 
     const existingByUsername = await this.repository.findByUsername(new UserUsername(username));
     if (existingByUsername) throw new UserAlreadyExists("Username already taken");
