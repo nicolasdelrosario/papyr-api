@@ -6,11 +6,12 @@ import type { UserId } from "@users/domain/value-objects/UserId";
 import type { UserName } from "@users/domain/value-objects/UserName";
 import type { UserPassword } from "@users/domain/value-objects/UserPassword";
 import type { UserUpdatedAt } from "@users/domain/value-objects/UserUpdatedAt";
+import type { UserUsername } from "@users/domain/value-objects/UserUsername";
 
 export class User {
   id: UserId;
   name: UserName;
-  username: UserName;
+  username: UserUsername;
   email: UserEmail;
   password: UserPassword;
   avatarUrl: UserAvatarUrl;
@@ -21,7 +22,7 @@ export class User {
   constructor(
     id: UserId,
     name: UserName,
-    username: UserName,
+    username: UserUsername,
     email: UserEmail,
     password: UserPassword,
     avatarUrl: UserAvatarUrl,
