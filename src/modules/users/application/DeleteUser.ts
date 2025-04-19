@@ -1,7 +1,7 @@
+import { UserActive } from "@users/domain/exceptions/UserActive";
 import { UserNotFound } from "@users/domain/exceptions/UserNotFound";
 import type { UserRepository } from "@users/domain/repository/UserRepository";
 import { UserId } from "@users/domain/value-objects/UserId";
-import { UserActive } from "@users/domain/exceptions/UserActive";
 
 export class DeleteUser {
   constructor(private readonly repository: UserRepository) {}
