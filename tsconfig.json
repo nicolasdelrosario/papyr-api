@@ -13,7 +13,7 @@
       "@/*": ["./src/*"],
       "@core/*": ["./src/modules/core/*"],
       "@auth/*": ["./src/modules/auth/*"],
-      "@user/*": ["./src/modules/user/*"]
+      "@users/*": ["./src/modules/users/*"]
     }
   }
 }
