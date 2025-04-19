@@ -10,5 +10,5 @@ export interface UserRepository {
   findByUsername(username: UserUsername): Promise<User | null>;
   register(user: User): Promise<void>;
   edit(user: User): Promise<void>;
-  deleteById(id: UserId): Promise<void>;
+  remove(id: UserId): Promise<void>;
 }
