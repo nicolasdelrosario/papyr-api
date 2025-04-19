@@ -1,11 +1,11 @@
-import type { UserId } from "@users/domain/value-objects/UserId";
-import type { UserName } from "@users/domain/value-objects/UserName";
-import type { UserEmail } from "@users/domain/value-objects/UserEmail";
-import type { UserPassword } from "@users/domain/value-objects/UserPassword";
 import type { UserAvatarUrl } from "@users/domain/value-objects/UserAvatarUrl";
 import type { UserCreatedAt } from "@users/domain/value-objects/UserCreatedAt";
-import type { UserUpdatedAt } from "@users/domain/value-objects/UserUpdatedAt";
 import type { UserDeletedAt } from "@users/domain/value-objects/UserDeletedAt";
+import type { UserEmail } from "@users/domain/value-objects/UserEmail";
+import type { UserId } from "@users/domain/value-objects/UserId";
+import type { UserName } from "@users/domain/value-objects/UserName";
+import type { UserPassword } from "@users/domain/value-objects/UserPassword";
+import type { UserUpdatedAt } from "@users/domain/value-objects/UserUpdatedAt";
 
 export class User {
   id: UserId;

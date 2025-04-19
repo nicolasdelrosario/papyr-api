@@ -7,7 +7,6 @@ export class UserName {
   }
 
   private validate(name: string): void {
-    if (name.length < 3)
-      throw new Error("Name must be at least 3 characters long");
+    if (name.length < 3) throw new Error("Name must be at least 3 characters long");
   }
 }
