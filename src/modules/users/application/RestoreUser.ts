@@ -13,7 +13,6 @@ export class RestoreUser {
 
     if (user.deletedAt.value === null) throw new UserActive("User is already active");
 
-    user.restore();
-    await this.repository.edit(user);
+    await this.repository.restore(new UserId(id));
   }
 }

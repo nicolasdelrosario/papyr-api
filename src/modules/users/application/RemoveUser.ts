@@ -14,7 +14,6 @@ export class RemoveUser {
 
     if (user.deletedAt.value !== null) throw new UserNotActive("User is already removed");
 
-    user.markAsDeleted();
-    await this.repository.edit(user);
+    await this.repository.remove(new UserId(id));
   }
 }
