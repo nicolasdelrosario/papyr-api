@@ -15,7 +15,7 @@ export class D1UserRepository implements UserRepository {
   constructor(private readonly db: D1Database) {}
 
   async getAll(): Promise<User[]> {
-    const { results } = await this.db.prepare("SELECT * FROM users").all<UserDTO>();
+    const { results } = await this.db.prepare("SELECT * FROM users WHERE deletedAt IS NULL").all<UserDTO>();
 
     return results.map((row) => this.mapToDomain(row));
   }
@@ -72,8 +72,24 @@ export class D1UserRepository implements UserRepository {
     const { id, name, username, email, avatarUrl, updatedAt } = user;
 
     await this.db
-      .prepare("UPDATE users SET name = ?, username = ?, email = ?, avatarUrl = ?, updatedAt = ? WHERE id = ?")
+      .prepare(
+        "UPDATE users SET name = ?, username = ?, email = ?, avatarUrl = ?, updatedAt = ? WHERE id = ? AND deletedAt IS NULL",
+      )
       .bind(name.value, username.value, email.value, avatarUrl.value, updatedAt.value.toISOString(), id.value)
+      .run();
+  }
+
+  async remove(id: UserId): Promise<void> {
+    await this.db
+      .prepare("UPDATE users SET deletedAt = ?, updatedAt = ? WHERE id = ? AND deletedAt IS NULL")
+      .bind(new Date().toISOString(), new Date().toISOString(), id.value)
+      .run();
+  }
+
+  async restore(id: UserId): Promise<void> {
+    await this.db
+      .prepare("UPDATE users SET deletedAt = NULL, updatedAt = ? WHERE id = ?")
+      .bind(new Date().toISOString(), id.value)
       .run();
   }
 
