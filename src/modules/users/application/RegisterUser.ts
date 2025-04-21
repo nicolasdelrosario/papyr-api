@@ -33,7 +33,7 @@ export class RegisterUser {
       new UserName(name),
       new UserUsername(username),
       new UserEmail(email),
-      hashedPassword,
+      new UserPassword(hashedPassword),
       new UserAvatarUrl(avatarUrl),
       new UserCreatedAt(new Date()),
       new UserUpdatedAt(new Date()),
