@@ -7,5 +7,5 @@ export interface ControllerResponse {
 }
 
 export interface Controller {
-  execute(c: Context): Promise<Response & TypedResponse<ControllerResponse, StatusCode, "json">>;
+  handle(c: Context): Promise<Response & TypedResponse<ControllerResponse, StatusCode, "json">>;
 }
