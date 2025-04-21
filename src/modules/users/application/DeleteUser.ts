@@ -15,6 +15,6 @@ export class DeleteUser {
       throw new UserActive("User is active, please deactivate it first");
     }
 
-    await this.repository.remove(new UserId(id));
+    await this.repository.delete(new UserId(id));
   }
 }
