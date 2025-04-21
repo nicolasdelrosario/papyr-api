@@ -3,7 +3,7 @@
   "vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["worker-configuration.d.ts", "**/node_modules", "**/bun.lock", "**/README.md"]
+    "ignore": ["worker-configuration.d.ts", "**/node_modules", "**/bun.lock", "**/README.md", ".wrangler"]
   },
   "formatter": {
     "enabled": true,
