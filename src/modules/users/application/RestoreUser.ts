@@ -9,9 +9,9 @@ export class RestoreUser {
   async execute(id: string): Promise<void> {
     const user = await this.repository.findById(new UserId(id));
 
-    if (!user) throw new UserNotFound(`User with id ${id} not found`);
+    if (!user) throw new UserNotFound("User not found");
 
-    if (user.deletedAt.value === null) throw new UserActive(`User with id ${id} is already active`);
+    if (user.deletedAt.value === null) throw new UserActive("User is already active");
 
     user.restore();
     await this.repository.edit(user);
