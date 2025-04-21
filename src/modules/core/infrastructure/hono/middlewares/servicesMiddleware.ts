@@ -1,4 +1,4 @@
-import { services as createServices } from "@core/infrastructure/Services";
+import { services as createServices } from "@core/infrastructure/services";
 import type { MiddlewareHandler } from "hono";
 
 export const servicesMiddleware: MiddlewareHandler = async (c, next) => {
