@@ -1,4 +1,4 @@
-import type { Services } from "@core/infrastructure/Services";
+import type { Services } from "@/modules/core/infrastructure/services";
 import type { Env } from "@core/infrastructure/config/environment";
 
 export type Variables = {
