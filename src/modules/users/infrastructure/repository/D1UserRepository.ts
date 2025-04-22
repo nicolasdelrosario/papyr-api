@@ -97,6 +97,13 @@ export class D1UserRepository implements UserRepository {
     await this.db.prepare("DELETE FROM users WHERE id = ?").bind(id.value).run();
   }
 
+  async changePassword(id: UserId, password: UserPassword, updatedAt: UserUpdatedAt): Promise<void> {
+    await this.db
+      .prepare("UPDATE users SET password = ?, updatedAt = ? WHERE id = ? AND deletedAt IS NULL")
+      .bind(password.value, updatedAt.value.toISOString(), id.value)
+      .run();
+  }
+
   private mapToDomain(row: UserDTO): User {
     return new User(
       new UserId(row.id),
