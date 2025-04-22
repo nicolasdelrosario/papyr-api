@@ -1,3 +1,5 @@
+import { Authenticate } from "@/modules/auth/application/Authenticate";
+import { ChangePassword } from "@/modules/auth/application/ChangePassword";
 import { BcryptEncryptionService } from "@auth/infrastructure/services/BcryptEncryptionService";
 import { DeleteUser } from "@users/application/DeleteUser";
 import { EditUser } from "@users/application/EditUser";
@@ -11,7 +13,7 @@ import { RestoreUser } from "@users/application/RestoreUser";
 import type { UserRepository } from "@users/domain/repository/UserRepository";
 import { D1UserRepository } from "@users/infrastructure/repository/D1UserRepository";
 
-export const services = (db: D1Database) => {
+export const services = (db: D1Database, jwtSecret: string) => {
   // repositories
   const userRepository: UserRepository = new D1UserRepository(db);
 
@@ -19,6 +21,10 @@ export const services = (db: D1Database) => {
   const encryptionService = new BcryptEncryptionService();
 
   return {
+    auth: {
+      authenticate: new Authenticate(userRepository, encryptionService, jwtSecret),
+      changePassword: new ChangePassword(userRepository, encryptionService),
+    },
     users: {
       getAll: new GetUsers(userRepository),
       findByEmail: new GetUserByEmail(userRepository),
