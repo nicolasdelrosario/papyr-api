@@ -1,6 +1,8 @@
 import type { User } from "@users/domain/model/User";
 import type { UserEmail } from "@users/domain/value-objects/UserEmail";
 import type { UserId } from "@users/domain/value-objects/UserId";
+import type { UserPassword } from "@users/domain/value-objects/UserPassword";
+import type { UserUpdatedAt } from "@users/domain/value-objects/UserUpdatedAt";
 import type { UserUsername } from "@users/domain/value-objects/UserUsername";
 
 export interface UserRepository {
@@ -13,4 +15,5 @@ export interface UserRepository {
   remove(id: UserId): Promise<void>;
   restore(id: UserId): Promise<void>;
   delete(id: UserId): Promise<void>;
+  changePassword(id: UserId, password: UserPassword, updatedAt: UserUpdatedAt): Promise<void>;
 }
