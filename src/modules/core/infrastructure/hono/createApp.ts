@@ -1,4 +1,5 @@
 import type { App } from "@/modules/core/infrastructure/hono/types/App";
+import { authMiddleware } from "@core/infrastructure/hono/middlewares/authMiddleware";
 import { notFound } from "@core/infrastructure/hono/middlewares/notFound";
 import { onError } from "@core/infrastructure/hono/middlewares/onError";
 import { servicesMiddleware } from "@core/infrastructure/hono/middlewares/servicesMiddleware";
@@ -22,6 +23,7 @@ export const createApp = () => {
 
   app.use("*", validateEnvironment);
   app.use("*", servicesMiddleware);
+  app.use("*", authMiddleware);
 
   return app;
 };
