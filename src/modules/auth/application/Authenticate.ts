@@ -1,7 +1,5 @@
 import type { EncryptionService } from "@auth/domain/services/EncryptionService";
 import { InvalidCredentials } from "@core/domain/exceptions/InvalidCredentials";
-import { UserNotActive } from "@users/domain/exceptions/UserNotActive";
-import { UserNotFound } from "@users/domain/exceptions/UserNotFound";
 import type { UserRepository } from "@users/domain/repository/UserRepository";
 import { UserEmail } from "@users/domain/value-objects/UserEmail";
 import { UserPassword } from "@users/domain/value-objects/UserPassword";
@@ -17,9 +15,9 @@ export class Authenticate {
   async execute(email: string, password: string) {
     const user = await this.repository.findByEmail(new UserEmail(email));
 
-    if (!user) throw new UserNotFound("User not found");
+    if (!user) throw new InvalidCredentials("Invalid credentials");
 
-    if (user.deletedAt.value !== null) throw new UserNotActive("User is not active");
+    if (!user.isActive()) throw new InvalidCredentials("Invalid credentials");
 
     const isPasswordValid = await this.service.verify(new UserPassword(password), user.password);
 
@@ -33,6 +31,11 @@ export class Authenticate {
 
     const token = await sign(payload, this.jwtSecret);
 
-    return token;
+    return {
+      id: user.id.value,
+      email: user.email.value,
+      name: user.name.value,
+      token,
+    };
   }
 }
