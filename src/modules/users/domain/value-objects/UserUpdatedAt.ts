@@ -7,6 +7,10 @@ export class UserUpdatedAt {
   }
 
   private validate(date: Date): void {
-    if (date > new Date()) throw new Error("UpdatedAt must be in the past");
+    if (Number.isNaN(date.getTime()))
+      throw new Error("UpdatedAt date must be a valid Date instance");
+
+    const now = new Date();
+    if (date > now) throw new Error("UpdatedAt must be in the past");
   }
 }
