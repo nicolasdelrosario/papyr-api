@@ -1,42 +1,29 @@
 import { z } from "zod";
 
-export const userIdParamSchema = z.object({
-  id: z.string().uuid(),
-});
-
 export const userSchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(3),
   username: z.string().min(3),
   email: z.string().email(),
   password: z.string().min(8),
-  avatarUrl: z.string().url().nullable(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  deletedAt: z.date().nullable(),
+  avatar_url: z.string().url().nullable(),
+  created_at: z.coerce.date(),
+  updated_at: z.coerce.date(),
+  deleted_at: z.coerce.date().nullable(),
 });
 
-export const userRegisterSchema = userSchema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  deletedAt: true,
-});
+export const userSaveSchema = userSchema
+  .extend({
+    id: z.string().uuid().optional(),
+  })
+  .omit({
+    created_at: true,
+    updated_at: true,
+    deleted_at: true,
+  });
 
-export const userEditSchema = userSchema.omit({
+export const userIdParamSchema = userSchema.pick({
   id: true,
-  password: true,
-  createdAt: true,
-  updatedAt: true,
-  deletedAt: true,
-});
-
-export const userPasswordSchema = userSchema.pick({
-  id: true,
-  password: true,
 });
 
 export type UserDTO = z.infer<typeof userSchema>;
-export type UserEditDTO = z.infer<typeof userEditSchema>;
-export type UserRegisterDTO = z.infer<typeof userRegisterSchema>;
-export type UserPasswordDTO = z.infer<typeof userPasswordSchema>;
