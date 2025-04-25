@@ -10,10 +10,37 @@
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
     "paths": {
+      // basic and auth paths
       "@/*": ["./src/*"],
       "@core/*": ["./src/modules/core/*"],
       "@auth/*": ["./src/modules/auth/*"],
-      "@users/*": ["./src/modules/users/*"]
+      "@users/*": ["./src/modules/users/*"],
+
+      // library paths
+      "@authors/*": ["./src/modules/authors/*"],
+      "@publishers/*": ["./src/modules/publishers/*"],
+      "@genres/*": ["./src/modules/genres/*"],
+      "@books/*": ["./src/modules/books/*"],
+      "@bookGenres/*": ["./src/modules/book-genres/*"],
+
+      // reading functionality paths
+      "@userBooks/*": ["./src/modules/user-books/*"],
+      "@readingSessions/*": ["./src/modules/reading-sessions/*"],
+      "@readingProgress/*": ["./src/modules/reading-progress/*"],
+
+      // personal organization paths
+      "@collections/*": ["./src/modules/collections/*"],
+      "@collectionBooks/*": ["./src/modules/collection-books/*"],
+      "@readingNotes/*": ["./src/modules/reading-notes/*"],
+
+      // social and community paths
+      "@reviews/*": ["./src/modules/reviews/*"],
+      "@friendships/*": ["./src/modules/friendships/*"],
+      "@readingGroups/*": ["./src/modules/reading-groups/*"],
+      "@userGroups/*": ["./src/modules/user-groups/*"],
+      "@discussions/*": ["./src/modules/discussions/*"],
+      "@comments/*": ["./src/modules/comments/*"],
+      "@messages/*": ["./src/modules/messages/*"]
     }
   }
 }
