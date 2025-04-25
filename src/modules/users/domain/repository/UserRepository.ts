@@ -6,14 +6,11 @@ import type { UserUpdatedAt } from "@users/domain/value-objects/UserUpdatedAt";
 import type { UserUsername } from "@users/domain/value-objects/UserUsername";
 
 export interface UserRepository {
-  getAll(): Promise<User[]>;
+  list(): Promise<User[]>;
   findById(id: UserId): Promise<User | null>;
   findByEmail(email: UserEmail): Promise<User | null>;
   findByUsername(username: UserUsername): Promise<User | null>;
-  register(user: User): Promise<void>;
-  edit(user: User): Promise<void>;
-  remove(id: UserId): Promise<void>;
-  restore(id: UserId): Promise<void>;
+  save(user: User): Promise<void>;
   delete(id: UserId): Promise<void>;
   changePassword(id: UserId, password: UserPassword, updatedAt: UserUpdatedAt): Promise<void>;
 }
