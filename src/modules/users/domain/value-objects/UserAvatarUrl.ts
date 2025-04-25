@@ -12,10 +12,8 @@ export class UserAvatarUrl {
   }
 
   private validate(avatarUrl: string): void {
-    if (!avatarUrl || typeof avatarUrl !== "string")
-      throw new Error("Avatar URL must be a valid string");
+    if (!avatarUrl || typeof avatarUrl !== "string") throw new Error("Avatar URL must be a valid string");
 
-    if (!avatarUrl.startsWith("http"))
-      throw new Error("Avatar URL must start with http");
+    if (!avatarUrl.startsWith("http")) throw new Error("Avatar URL must start with http");
   }
 }

@@ -7,10 +7,8 @@ export class UserPassword {
   }
 
   private validate(password: string): void {
-    if (!password || typeof password !== "string")
-      throw new Error("Password must be a valid string");
+    if (!password || typeof password !== "string") throw new Error("Password must be a valid string");
 
-    if (password.trim().length < 8)
-      throw new Error("Password must be at least 8 characters long");
+    if (password.trim().length < 8) throw new Error("Password must be at least 8 characters long");
   }
 }

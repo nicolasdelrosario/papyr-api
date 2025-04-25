@@ -7,10 +7,8 @@ export class UserName {
   }
 
   private validate(name: string): void {
-    if (!name || typeof name !== "string")
-      throw new Error("Name must be a valid string");
+    if (!name || typeof name !== "string") throw new Error("Name must be a valid string");
 
-    if (name.trim().length < 3)
-      throw new Error("Name must be at least 3 characters long");
+    if (name.trim().length < 3) throw new Error("Name must be at least 3 characters long");
   }
 }
