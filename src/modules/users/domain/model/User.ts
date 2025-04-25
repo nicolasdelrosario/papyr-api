@@ -1,6 +1,6 @@
 import type { UserAvatarUrl } from "@users/domain/value-objects/UserAvatarUrl";
 import type { UserCreatedAt } from "@users/domain/value-objects/UserCreatedAt";
-import type { UserDeletedAt } from "@users/domain/value-objects/UserDeletedAt";
+import { UserDeletedAt } from "@users/domain/value-objects/UserDeletedAt";
 import type { UserEmail } from "@users/domain/value-objects/UserEmail";
 import type { UserId } from "@users/domain/value-objects/UserId";
 import type { UserName } from "@users/domain/value-objects/UserName";
@@ -66,5 +66,17 @@ export class User {
       updatedAt: this.updatedAt.value,
       deletedAt: this.deletedAt.value,
     };
+  }
+
+  isActive(): boolean {
+    return this.deletedAt.value === null;
+  }
+
+  remove(): void {
+    this.deletedAt = new UserDeletedAt(new Date());
+  }
+
+  restore(): void {
+    this.deletedAt = new UserDeletedAt(null);
   }
 }
