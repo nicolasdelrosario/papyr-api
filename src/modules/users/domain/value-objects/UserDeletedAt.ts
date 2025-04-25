@@ -1,12 +1,21 @@
 export class UserDeletedAt {
-  public readonly value: null | Date;
+  public readonly value: Date | null;
 
-  constructor(value: null | Date) {
+  constructor(value: Date | null) {
+    if (value === null || value === undefined) {
+      this.value = null;
+      return;
+    }
+
     this.validate(value);
     this.value = value;
   }
 
-  private validate(date: null | Date): void {
-    if (date && date > new Date()) throw new Error("DeletedAt must be in the past");
+  private validate(date: Date): void {
+    if (Number.isNaN(date.getTime()))
+      throw new Error("DeletedAt must be a valid Date instance");
+
+    const now = new Date();
+    if (date > now) throw new Error("DeletedAt must be in the past");
   }
 }
