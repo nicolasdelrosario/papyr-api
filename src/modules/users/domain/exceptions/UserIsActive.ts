@@ -1,4 +1,4 @@
-export class UserActive extends Error {
+export class UserIsActive extends Error {
   constructor(message: string) {
     super(message);
     this.name = "User is Active";
