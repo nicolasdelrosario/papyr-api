@@ -4,8 +4,8 @@ CREATE TABLE users (
     username TEXT NOT NULL UNIQUE,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
-    avatarUrl TEXT,
-    createdAt TEXT NOT NULL,
-    updatedAt TEXT NOT NULL,
-    deletedAt TEXT
+    avatar_url TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    deleted_at TEXT
 );
