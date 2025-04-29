@@ -1,3 +1,4 @@
+import type { ChangePasswordDTO } from "@auth/application/dtos/ChangePasswordDto";
 import type { EncryptionService } from "@auth/domain/services/EncryptionService";
 import { InvalidCredentials } from "@core/domain/exceptions/InvalidCredentials";
 import type { UserRepository } from "@users/domain/repository/UserRepository";
@@ -11,7 +12,9 @@ export class ChangePassword {
     private readonly service: EncryptionService,
   ) {}
 
-  async execute(email: string, password: string, newPassword: string) {
+  async execute(credentials: ChangePasswordDTO) {
+    const { email, password, new_password } = credentials;
+
     const userEmail = new UserEmail(email);
     const user = await this.repository.findByEmail(userEmail);
     const now = new Date();
@@ -22,7 +25,7 @@ export class ChangePassword {
 
     if (!passwordMatches) throw new InvalidCredentials("Invalid Credentials");
 
-    const hashedPassword = await this.service.hash(new UserPassword(newPassword));
+    const hashedPassword = await this.service.hash(new UserPassword(new_password));
 
     await this.repository.changePassword(user.id, new UserPassword(hashedPassword), new UserUpdatedAt(now));
   }
