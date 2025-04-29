@@ -1,4 +1,5 @@
 import type { EncryptionService } from "@auth/domain/services/EncryptionService";
+import type { SaveUserDto } from "@users/application/dtos/SaveUserDto";
 import { EmailAlreadyInUse } from "@users/domain/exceptions/EmailAlreadyInUse";
 import { UserIsNotActive } from "@users/domain/exceptions/UserIsNotActive";
 import { UsernameAlreadyInUse } from "@users/domain/exceptions/UsernameAlreadyInUse";
@@ -13,7 +14,6 @@ import { UserName } from "@users/domain/value-objects/UserName";
 import { UserPassword } from "@users/domain/value-objects/UserPassword";
 import { UserUpdatedAt } from "@users/domain/value-objects/UserUpdatedAt";
 import { UserUsername } from "@users/domain/value-objects/UserUsername";
-import type { SaveUserDto } from "@users/application/dtos/SaveUserDto";
 
 export class SaveUser {
   constructor(
@@ -22,29 +22,19 @@ export class SaveUser {
   ) {}
 
   async execute(user: SaveUserDto) {
-    const userId = user.id
-      ? new UserId(user.id)
-      : new UserId(crypto.randomUUID());
+    const userId = user.id ? new UserId(user.id) : new UserId(crypto.randomUUID());
     const now = new Date();
 
     const existingUser = await this.repository.findById(userId);
-    const existingEmail = await this.repository.findByEmail(
-      new UserEmail(user.email),
-    );
-    const existingUsername = await this.repository.findByUsername(
-      new UserUsername(user.username),
-    );
+    const existingEmail = await this.repository.findByEmail(new UserEmail(user.email));
+    const existingUsername = await this.repository.findByUsername(new UserUsername(user.username));
 
     if (!existingUser) {
-      if (existingEmail)
-        throw new EmailAlreadyInUse("The email is already in use");
+      if (existingEmail) throw new EmailAlreadyInUse("The email is already in use");
 
-      if (existingUsername)
-        throw new UsernameAlreadyInUse("The username is already in use");
+      if (existingUsername) throw new UsernameAlreadyInUse("The username is already in use");
 
-      const hashedPassword = await this.service.hash(
-        new UserPassword(user.password),
-      );
+      const hashedPassword = await this.service.hash(new UserPassword(user.password));
 
       const newUser = new User(
         userId,
@@ -61,8 +51,7 @@ export class SaveUser {
       return await this.repository.save(newUser);
     }
 
-    if (!existingUser.isActive())
-      throw new UserIsNotActive("User is not active");
+    if (!existingUser.isActive()) throw new UserIsNotActive("User is not active");
 
     const updatedUser = new User(
       userId,
