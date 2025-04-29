@@ -5,10 +5,8 @@ export const loginSchema = z.object({
   password: z.string().min(8),
 });
 
-export const changePasswordSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-  newPassword: z.string().min(8),
+export const changePasswordSchema = loginSchema.extend({
+  new_password: z.string().min(8),
 });
 
 export type LoginDTO = z.infer<typeof loginSchema>;
