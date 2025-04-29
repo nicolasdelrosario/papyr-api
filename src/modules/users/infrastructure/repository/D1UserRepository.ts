@@ -14,82 +14,62 @@ import type { UserDTO } from "@users/infrastructure/schemas/zodUserSchema";
 export class D1UserRepository implements UserRepository {
   constructor(private readonly db: D1Database) {}
 
-  async getAll(): Promise<User[]> {
-    const { results } = await this.db.prepare("SELECT * FROM users WHERE deletedAt IS NULL").all<UserDTO>();
+  async list(): Promise<User[]> {
+    const { results } = await this.db.prepare("SELECT * FROM users WHERE deleted_at IS NULL").all<UserDTO>();
 
     return results.map((row) => this.mapToDomain(row));
   }
 
   async findById(id: UserId): Promise<User | null> {
-    const { results } = await this.db.prepare("SELECT * FROM users WHERE id = ?").bind(id.value).all<UserDTO>();
+    const row = await this.db.prepare("SELECT * FROM users WHERE id = ?").bind(id.value).first<UserDTO>();
 
-    if (!results.length) return null;
-
-    return this.mapToDomain(results[0]);
+    return row ? this.mapToDomain(row) : null;
   }
 
   async findByEmail(email: UserEmail): Promise<User | null> {
-    const { results } = await this.db.prepare("SELECT * FROM users WHERE email = ?").bind(email.value).all<UserDTO>();
+    const row = await this.db.prepare("SELECT * FROM users WHERE email = ? ").bind(email.value).first<UserDTO>();
 
-    if (!results.length) return null;
-
-    return this.mapToDomain(results[0]);
+    return row ? this.mapToDomain(row) : null;
   }
 
   async findByUsername(username: UserUsername): Promise<User | null> {
-    const { results } = await this.db
-      .prepare("SELECT * FROM users WHERE username = ?")
-      .bind(username.value)
-      .all<UserDTO>();
+    const row = await this.db.prepare("SELECT * FROM users WHERE username = ? ").bind(username.value).first<UserDTO>();
 
-    if (!results.length) return null;
-
-    return this.mapToDomain(results[0]);
+    return row ? this.mapToDomain(row) : null;
   }
 
-  async register(user: User): Promise<void> {
-    const { id, name, username, email, password, avatarUrl, createdAt, updatedAt, deletedAt } = user;
-
+  async save(user: User): Promise<void> {
     await this.db
       .prepare(
-        "INSERT INTO users (id, name, username, email, password, avatarUrl, createdAt, updatedAt, deletedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        `
+      INSERT INTO users (
+        id, name, username, email, password, avatar_url,
+        created_at, updated_at, deleted_at
+      )
+      VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?, ?
+      )
+      ON CONFLICT(id) DO UPDATE SET
+        name = excluded.name,
+        username = excluded.username,
+        email = excluded.email,
+        password = excluded.password,
+        avatar_url = excluded.avatar_url,
+        updated_at = excluded.updated_at,
+        deleted_at = excluded.deleted_at
+  `,
       )
       .bind(
-        id.value,
-        name.value,
-        username.value,
-        email.value,
-        password.value,
-        avatarUrl.value,
-        createdAt.value.toISOString(),
-        updatedAt.value.toISOString(),
-        deletedAt.value,
+        user.id.value,
+        user.name.value,
+        user.username.value,
+        user.email.value,
+        user.password.value,
+        user.avatarUrl.value,
+        user.createdAt.value.toISOString(),
+        user.updatedAt.value.toISOString(),
+        user.deletedAt.value ? user.deletedAt.value.toISOString() : null,
       )
-      .run();
-  }
-
-  async edit(user: User): Promise<void> {
-    const { id, name, username, email, avatarUrl, updatedAt } = user;
-
-    await this.db
-      .prepare(
-        "UPDATE users SET name = ?, username = ?, email = ?, avatarUrl = ?, updatedAt = ? WHERE id = ? AND deletedAt IS NULL",
-      )
-      .bind(name.value, username.value, email.value, avatarUrl.value, updatedAt.value.toISOString(), id.value)
-      .run();
-  }
-
-  async remove(id: UserId): Promise<void> {
-    await this.db
-      .prepare("UPDATE users SET deletedAt = ?, updatedAt = ? WHERE id = ? AND deletedAt IS NULL")
-      .bind(new Date().toISOString(), new Date().toISOString(), id.value)
-      .run();
-  }
-
-  async restore(id: UserId): Promise<void> {
-    await this.db
-      .prepare("UPDATE users SET deletedAt = NULL, updatedAt = ? WHERE id = ?")
-      .bind(new Date().toISOString(), id.value)
       .run();
   }
 
@@ -99,7 +79,7 @@ export class D1UserRepository implements UserRepository {
 
   async changePassword(id: UserId, password: UserPassword, updatedAt: UserUpdatedAt): Promise<void> {
     await this.db
-      .prepare("UPDATE users SET password = ?, updatedAt = ? WHERE id = ? AND deletedAt IS NULL")
+      .prepare("UPDATE users SET password = ?, updated_at = ? WHERE id = ?")
       .bind(password.value, updatedAt.value.toISOString(), id.value)
       .run();
   }
@@ -111,10 +91,10 @@ export class D1UserRepository implements UserRepository {
       new UserUsername(row.username),
       new UserEmail(row.email),
       new UserPassword(row.password),
-      new UserAvatarUrl(row.avatarUrl),
-      new UserCreatedAt(row.createdAt),
-      new UserUpdatedAt(row.updatedAt),
-      new UserDeletedAt(row.deletedAt),
+      new UserAvatarUrl(row.avatar_url),
+      new UserCreatedAt(new Date(row.created_at)),
+      new UserUpdatedAt(new Date(row.updated_at)),
+      new UserDeletedAt(row.deleted_at ? new Date(row.deleted_at) : null),
     );
   }
 }
