@@ -1,6 +1,6 @@
-import { InvalidToken } from "@auth/domain/exceptions/InvalidToken";
 import * as HttpStatusCodes from "@core/common/httpStatusCodes";
 import * as HttpStatusPhrases from "@core/common/httpStatusPhrases";
+import { InvalidToken } from "@core/domain/exceptions/InvalidToken";
 import type { App } from "@core/infrastructure/hono/types/App";
 import type { Context, MiddlewareHandler, Next } from "hono";
 import { getCookie } from "hono/cookie";
