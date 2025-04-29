@@ -12,9 +12,6 @@ export class AuthorBiography {
   }
 
   private validate(biography: string): void {
-    if (biography.trim().length < 10)
-      throw new Error(
-        "Biography must be at least 10 non-space characters long",
-      );
+    if (biography.trim().length < 10) throw new Error("Biography must be at least 10 non-space characters long");
   }
 }

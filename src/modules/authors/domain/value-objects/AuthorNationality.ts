@@ -12,12 +12,8 @@ export class AuthorNationality {
   }
 
   private validate(nationality: string): void {
-    if (!nationality || typeof nationality !== "string")
-      throw new Error("Nationality must be a valid string");
+    if (!nationality || typeof nationality !== "string") throw new Error("Nationality must be a valid string");
 
-    if (nationality.trim().length < 3)
-      throw new Error(
-        "Nationality must be at least 3 non-space characters long",
-      );
+    if (nationality.trim().length < 3) throw new Error("Nationality must be at least 3 non-space characters long");
   }
 }

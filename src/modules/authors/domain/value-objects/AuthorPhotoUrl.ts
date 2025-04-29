@@ -12,10 +12,8 @@ export class AuthorPhotoUrl {
   }
 
   private validate(value: string): void {
-    if (!value || typeof value !== "string")
-      throw new Error("Author photo URL must be a valid string");
+    if (!value || typeof value !== "string") throw new Error("Author photo URL must be a valid string");
 
-    if (!value.startsWith("http"))
-      throw new Error("Author photo URL must start with http");
+    if (!value.startsWith("http")) throw new Error("Author photo URL must start with http");
   }
 }

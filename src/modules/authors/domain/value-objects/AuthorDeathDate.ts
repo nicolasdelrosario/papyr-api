@@ -12,8 +12,7 @@ export class AuthorDeathDate {
   }
 
   private validate(date: Date): void {
-    if (Number.isNaN(date.getTime()))
-      throw new Error("Death date must be a valid Date instance");
+    if (Number.isNaN(date.getTime())) throw new Error("Death date must be a valid Date instance");
 
     const now = new Date();
     if (date > now) throw new Error("Death date must be in the past");
