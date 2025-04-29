@@ -1,5 +1,5 @@
-import type { PublisherRepository } from "@publishers/domain/repository/PublisherRepository";
 import type { Publisher } from "@publishers/domain/model/Publisher";
+import type { PublisherRepository } from "@publishers/domain/repository/PublisherRepository";
 
 export class ListPublishers {
   constructor(private readonly repository: PublisherRepository) {}

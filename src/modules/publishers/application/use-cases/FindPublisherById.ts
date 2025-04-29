@@ -12,8 +12,7 @@ export class FindPublisherById {
 
     if (!publisher) throw new PublisherWasNotFound("Publisher was not found.");
 
-    if (!publisher.isActive())
-      throw new PublisherIsNotActive("Publisher is not active.");
+    if (!publisher.isActive()) throw new PublisherIsNotActive("Publisher is not active.");
 
     return publisher;
   }

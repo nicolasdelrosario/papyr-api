@@ -12,8 +12,7 @@ export class DeletePublisher {
 
     if (!publisher) throw new PublisherWasNotFound("Publisher was not found");
 
-    if (publisher.isActive())
-      throw new PublisherIsActive("Publisher is active, cannot be deleted");
+    if (publisher.isActive()) throw new PublisherIsActive("Publisher is active, cannot be deleted");
 
     return await this.repository.delete(publisherId);
   }
