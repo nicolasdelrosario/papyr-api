@@ -1,5 +1,5 @@
-import { Authenticate } from "@/modules/auth/application/Authenticate";
-import { ChangePassword } from "@/modules/auth/application/ChangePassword";
+import { Authenticate } from "@/modules/auth/application/use-cases/Authenticate";
+import { ChangePassword } from "@/modules/auth/application/use-cases/ChangePassword";
 import { DeleteUser } from "@/modules/users/application/use-cases/DeleteUser";
 import { FindUserByEmail } from "@/modules/users/application/use-cases/FindUserByEmail";
 import { FindUserById } from "@/modules/users/application/use-cases/FindUserById";
