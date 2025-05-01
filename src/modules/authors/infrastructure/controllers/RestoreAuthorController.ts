@@ -1,7 +1,6 @@
 import { AuthorIsActive } from "@authors/domain/exceptions/AuthorIsActive";
 import { AuthorWasNotFound } from "@authors/domain/exceptions/AuthorWasNotFound";
 import * as HttpStatusCodes from "@core/common/httpStatusCodes";
-import * as HttpStatusPhrases from "@core/common/httpStatusPhrases";
 import type { Controller, ControllerResponse } from "@core/infrastructure/Controller";
 import type { App } from "@core/infrastructure/hono/types/App";
 import type { Context, TypedResponse } from "hono";
@@ -18,7 +17,7 @@ export class RestoreAuthorController implements Controller {
       return c.json(
         {
           data: null,
-          message: HttpStatusPhrases.OK,
+          message: "Author was restored successfully",
         },
         HttpStatusCodes.OK,
       );

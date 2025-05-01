@@ -14,7 +14,7 @@ export class DeleteAuthorController implements Controller {
 
       await services.authors.delete.execute(id);
 
-      return c.json({ data: null, message: "Author deleted successfully" }, HttpStatusCodes.OK);
+      return c.json({ data: null, message: "Author was deleted successfully" }, HttpStatusCodes.OK);
     } catch (error) {
       if (error instanceof AuthorWasNotFound)
         return c.json({ data: null, message: error.message }, HttpStatusCodes.NOT_FOUND);

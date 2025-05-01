@@ -1,9 +1,7 @@
+import { AuthorIsNotActive } from "@authors/domain/exceptions/AuthorIsNotActive";
 import * as HttpStatusCodes from "@core/common/httpStatusCodes";
 import type { Controller, ControllerResponse } from "@core/infrastructure/Controller";
 import type { App } from "@core/infrastructure/hono/types/App";
-import { EmailAlreadyInUse } from "@users/domain/exceptions/EmailAlreadyInUse";
-import { UserWasNotFound } from "@users/domain/exceptions/UserWasNotFound";
-import { UsernameAlreadyInUse } from "@users/domain/exceptions/UsernameAlreadyInUse";
 import type { Context, TypedResponse } from "hono";
 import type { StatusCode } from "hono/utils/http-status";
 
@@ -17,11 +15,8 @@ export class SaveAuthorController implements Controller {
 
       return c.json({ data: null, message: "Author was saved successfully" }, HttpStatusCodes.OK);
     } catch (error) {
-      if (error instanceof EmailAlreadyInUse || error instanceof UsernameAlreadyInUse)
-        return c.json({ data: null, message: error.message }, HttpStatusCodes.CONFLICT);
-
-      if (error instanceof UserWasNotFound)
-        return c.json({ data: null, message: error.message }, HttpStatusCodes.NOT_FOUND);
+      if (error instanceof AuthorIsNotActive)
+        return c.json({ data: null, message: error.message }, HttpStatusCodes.FORBIDDEN);
 
       throw error;
     }
