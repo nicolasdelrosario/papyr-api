@@ -1,5 +1,12 @@
 import { Authenticate } from "@/modules/auth/application/use-cases/Authenticate";
 import { ChangePassword } from "@/modules/auth/application/use-cases/ChangePassword";
+import { DeleteAuthor } from "@/modules/authors/application/use-cases/DeleteAuthor";
+import { FindAuthorById } from "@/modules/authors/application/use-cases/FindAuthorById";
+import { ListAuthors } from "@/modules/authors/application/use-cases/ListAuthors";
+import { RestoreAuthor } from "@/modules/authors/application/use-cases/RestoreAuthor";
+import { SaveAuthor } from "@/modules/authors/application/use-cases/SaveAuthor";
+import { SoftDeleteAuthor } from "@/modules/authors/application/use-cases/SoftDeleteAuthor";
+import type { AuthorRepository } from "@/modules/authors/domain/repository/AuthorRepository";
 import { DeleteUser } from "@/modules/users/application/use-cases/DeleteUser";
 import { FindUserByEmail } from "@/modules/users/application/use-cases/FindUserByEmail";
 import { FindUserById } from "@/modules/users/application/use-cases/FindUserById";
@@ -9,12 +16,14 @@ import { RestoreUser } from "@/modules/users/application/use-cases/RestoreUser";
 import { SaveUser } from "@/modules/users/application/use-cases/SaveUser";
 import { SoftDeleteUser } from "@/modules/users/application/use-cases/SoftDeleteUser";
 import { BcryptEncryptionService } from "@auth/infrastructure/services/BcryptEncryptionService";
+import { D1AuthorRepository } from "@authors/infrastructure/repository/D1AuthorRepository";
 import type { UserRepository } from "@users/domain/repository/UserRepository";
 import { D1UserRepository } from "@users/infrastructure/repository/D1UserRepository";
 
 export const services = (db: D1Database, jwtSecret: string) => {
   // repositories
   const userRepository: UserRepository = new D1UserRepository(db);
+  const authorRepository: AuthorRepository = new D1AuthorRepository(db);
 
   // services
   const encryptionService = new BcryptEncryptionService();
@@ -33,6 +42,14 @@ export const services = (db: D1Database, jwtSecret: string) => {
       delete: new DeleteUser(userRepository),
       restore: new RestoreUser(userRepository),
       softDelete: new SoftDeleteUser(userRepository),
+    },
+    authors: {
+      list: new ListAuthors(authorRepository),
+      findById: new FindAuthorById(authorRepository),
+      save: new SaveAuthor(authorRepository),
+      delete: new DeleteAuthor(authorRepository),
+      restore: new RestoreAuthor(authorRepository),
+      softDelete: new SoftDeleteAuthor(authorRepository),
     },
   };
 };
