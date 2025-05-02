@@ -10,13 +10,13 @@ import { AuthorName } from "@authors/domain/value-objects/AuthorName";
 import { AuthorNationality } from "@authors/domain/value-objects/AuthorNationality";
 import { AuthorPhotoUrl } from "@authors/domain/value-objects/AuthorPhotoUrl";
 import { AuthorUpdatedAt } from "@authors/domain/value-objects/AuthorUpdatedAt";
-import type { AuthorDTO } from "@authors/infrastructure/schemas/zodAuthorSchema";
+import { type AuthorDTO, authorSchema } from "@authors/infrastructure/schemas/zodAuthorSchema";
 
 export class D1AuthorRepository implements AuthorRepository {
   constructor(private readonly db: D1Database) {}
 
   async list(): Promise<Author[]> {
-    const { results } = await this.db.prepare("SELECT * FROM authors WHERE deletedAt IS NULL").all<AuthorDTO>();
+    const { results } = await this.db.prepare("SELECT * FROM authors WHERE deleted_at IS NULL").all<AuthorDTO>();
 
     return results.map((row) => this.mapToDomain(row));
   }
@@ -76,17 +76,19 @@ export class D1AuthorRepository implements AuthorRepository {
   }
 
   private mapToDomain(row: AuthorDTO): Author {
+    const parsed = authorSchema.parse(row);
+
     return new Author(
-      new AuthorId(row.id),
-      new AuthorName(row.name),
-      new AuthorBiography(row.biography),
-      new AuthorBirthDate(new Date(row.birth_date)),
-      new AuthorDeathDate(row.death_date ? new Date(row.death_date) : null),
-      new AuthorNationality(row.nationality),
-      new AuthorPhotoUrl(row.photo_url),
-      new AuthorCreatedAt(new Date(row.created_at)),
-      new AuthorUpdatedAt(new Date(row.updated_at)),
-      new AuthorDeletedAt(row.deleted_at ? new Date(row.deleted_at) : null),
+      new AuthorId(parsed.id),
+      new AuthorName(parsed.name),
+      new AuthorBiography(parsed.biography),
+      new AuthorBirthDate(new Date(parsed.birth_date)),
+      new AuthorDeathDate(parsed.death_date ? new Date(parsed.death_date) : null),
+      new AuthorNationality(parsed.nationality),
+      new AuthorPhotoUrl(parsed.photo_url),
+      new AuthorCreatedAt(new Date(parsed.created_at)),
+      new AuthorUpdatedAt(new Date(parsed.updated_at)),
+      new AuthorDeletedAt(parsed.deleted_at ? new Date(parsed.deleted_at) : null),
     );
   }
 }
