@@ -22,7 +22,7 @@ const saveValidation = zValidator("json", userSaveSchema);
 export const register = (app: Hono<App>): void => {
   app.get("/users", list.handle);
   app.get("/users/:id", idValidation, findById.handle);
-  app.post("/users", saveValidation, save.handle);
+  app.post("/signup", saveValidation, save.handle);
   app.delete("/users/:id", idValidation, deleteUser.handle);
   app.post("/users/:id/restore", idValidation, restore.handle);
   app.post("/users/:id/soft-delete", idValidation, softDelete.handle);
