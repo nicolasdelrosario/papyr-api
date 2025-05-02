@@ -7,7 +7,8 @@ export class AuthorBirthDate {
   }
 
   private validate(date: Date): void {
-    if (Number.isNaN(date.getTime())) throw new Error("Birth date must be a valid Date instance");
+    if (!(date instanceof Date) || Number.isNaN(date.getTime()))
+      throw new Error("Birth date must be a valid Date instance");
 
     const now = new Date();
     if (date > now) throw new Error("Birth date must be in the past");
