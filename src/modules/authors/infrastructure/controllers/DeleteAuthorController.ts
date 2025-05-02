@@ -1,4 +1,4 @@
-import { AuthorIsNotActive } from "@authors/domain/exceptions/AuthorIsNotActive";
+import { AuthorIsActive } from "@authors/domain/exceptions/AuthorIsActive";
 import { AuthorWasNotFound } from "@authors/domain/exceptions/AuthorWasNotFound";
 import * as HttpStatusCodes from "@core/common/httpStatusCodes";
 import type { Controller, ControllerResponse } from "@core/infrastructure/Controller";
@@ -19,7 +19,7 @@ export class DeleteAuthorController implements Controller {
       if (error instanceof AuthorWasNotFound)
         return c.json({ data: null, message: error.message }, HttpStatusCodes.NOT_FOUND);
 
-      if (error instanceof AuthorIsNotActive)
+      if (error instanceof AuthorIsActive)
         return c.json({ data: null, message: error.message }, HttpStatusCodes.CONFLICT);
 
       throw error;
