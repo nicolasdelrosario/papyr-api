@@ -2,9 +2,10 @@ import type { App } from "@core/infrastructure/hono/types/App";
 import type { Hono } from "hono";
 
 import * as authRoutes from "@auth/infrastructure/routes/honoAuthRoutes";
+import * as authorRoutes from "@authors/infrastructure/routes/honoAuthorRoutes";
 import * as userRoutes from "@users/infrastructure/routes/honoUserRoutes";
 
-const routes = [authRoutes, userRoutes];
+const routes = [authRoutes, userRoutes, authorRoutes];
 
 export function registerRoutes(app: Hono<App>): void {
   for (const route of routes) {
