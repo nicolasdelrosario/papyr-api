@@ -1,4 +1,5 @@
 import { AuthorIsNotActive } from "@authors/domain/exceptions/AuthorIsNotActive";
+import { AuthorWasNotFound } from "@authors/domain/exceptions/AuthorWasNotFound";
 import * as HttpStatusCodes from "@core/common/httpStatusCodes";
 import type { Controller, ControllerResponse } from "@core/infrastructure/Controller";
 import type { App } from "@core/infrastructure/hono/types/App";
@@ -17,6 +18,9 @@ export class SaveAuthorController implements Controller {
     } catch (error) {
       if (error instanceof AuthorIsNotActive)
         return c.json({ data: null, message: error.message }, HttpStatusCodes.FORBIDDEN);
+
+      if (error instanceof AuthorWasNotFound)
+        return c.json({ data: null, message: error.message }, HttpStatusCodes.NOT_FOUND);
 
       throw error;
     }
