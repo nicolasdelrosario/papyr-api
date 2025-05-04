@@ -1,5 +1,6 @@
 import type { SavePublisherDto } from "@publishers/application/dtos/SavePublisherDto";
 import { PublisherIsNotActive } from "@publishers/domain/exceptions/PublisherIsNotActive";
+import { PublisherWasNotFound } from "@publishers/domain/exceptions/PublisherWasNotFound"; // Faltaba esta excepción
 import { Publisher } from "@publishers/domain/model/Publisher";
 import type { PublisherRepository } from "@publishers/domain/repository/PublisherRepository";
 import { PublisherCountry } from "@publishers/domain/value-objects/PublisherCountry";
@@ -17,43 +18,50 @@ export class SavePublisher {
   constructor(private readonly repository: PublisherRepository) {}
 
   async execute(publisher: SavePublisherDto): Promise<void> {
-    const publisherId = publisher.id ? new PublisherId(publisher.id) : new PublisherId(crypto.randomUUID());
     const now = new Date();
+    const isUpdate = publisher.id !== undefined && publisher.id !== null;
 
-    const existingPublisher = await this.repository.findById(publisherId);
+    if (isUpdate) {
+      const publisherId = new PublisherId(publisher.id);
+      const existingPublisher = await this.repository.findById(publisherId);
 
-    if (!existingPublisher) {
-      const newPublisher = new Publisher(
+      if (!existingPublisher) throw new PublisherWasNotFound("Publisher was not found");
+
+      if (!existingPublisher.isActive()) throw new PublisherIsNotActive("Publisher is not active");
+
+      const updatedPublisher = new Publisher(
         publisherId,
-        new PublisherName(publisher.name),
-        new PublisherCountry(publisher.country),
-        new PublisherWebsiteUrl(publisher.website_url ?? null),
-        new PublisherFoundedYear(publisher.founded_year),
-        new PublisherDescription(publisher.description ?? null),
-        new PublisherLogoUrl(publisher.logo_url ?? null),
-        new PublisherCreatedAt(now),
+        new PublisherName(publisher.name ?? existingPublisher.name.value),
+        new PublisherCountry(publisher.country ?? existingPublisher.country.value),
+        new PublisherWebsiteUrl(publisher.website_url ?? existingPublisher.websiteUrl.value),
+        new PublisherFoundedYear(
+          publisher.founded_year ? new Date(publisher.founded_year) : existingPublisher.foundedYear.value,
+        ),
+        new PublisherDescription(publisher.description ?? existingPublisher.description.value),
+        new PublisherLogoUrl(publisher.logo_url ?? existingPublisher.logoUrl.value),
+        new PublisherCreatedAt(existingPublisher.createdAt.value),
         new PublisherUpdatedAt(now),
-        new PublisherDeletedAt(null),
+        new PublisherDeletedAt(existingPublisher.deletedAt.value),
       );
 
-      return await this.repository.save(newPublisher);
+      return await this.repository.save(updatedPublisher);
     }
 
-    if (!existingPublisher.isActive()) throw new PublisherIsNotActive("Publisher is not active");
+    const publisherId = new PublisherId(crypto.randomUUID());
 
-    const updatedPublisher = new Publisher(
+    const newPublisher = new Publisher(
       publisherId,
-      new PublisherName(publisher.name ?? existingPublisher.name.value),
-      new PublisherCountry(publisher.country ?? existingPublisher.country.value),
-      new PublisherWebsiteUrl(publisher.website_url ?? existingPublisher.websiteUrl.value),
-      new PublisherFoundedYear(publisher.founded_year ?? existingPublisher.foundedYear.value),
-      new PublisherDescription(publisher.description ?? existingPublisher.description.value),
-      new PublisherLogoUrl(publisher.logo_url ?? existingPublisher.logoUrl.value),
-      new PublisherCreatedAt(existingPublisher.createdAt.value),
+      new PublisherName(publisher.name),
+      new PublisherCountry(publisher.country),
+      new PublisherWebsiteUrl(publisher.website_url ?? null),
+      new PublisherFoundedYear(new Date(publisher.founded_year)),
+      new PublisherDescription(publisher.description ?? null),
+      new PublisherLogoUrl(publisher.logo_url ?? null),
+      new PublisherCreatedAt(now),
       new PublisherUpdatedAt(now),
-      new PublisherDeletedAt(existingPublisher.deletedAt.value),
+      new PublisherDeletedAt(null),
     );
 
-    return await this.repository.save(updatedPublisher);
+    return await this.repository.save(newPublisher);
   }
 }
