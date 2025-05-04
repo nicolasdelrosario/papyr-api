@@ -1,5 +1,5 @@
 export interface SaveGenreDto {
-  id?: string;
+  id: string;
   name: string;
   description: string | null;
 }
