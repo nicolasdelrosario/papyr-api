@@ -82,13 +82,13 @@ export class D1PublisherRepository implements PublisherRepository {
       new PublisherId(parsed.id),
       new PublisherName(parsed.name),
       new PublisherCountry(parsed.country),
-      new PublisherWebsiteUrl(parsed.website_url),
-      new PublisherFoundedYear(new Date(parsed.founded_year)),
+      new PublisherWebsiteUrl(parsed.websiteUrl),
+      new PublisherFoundedYear(new Date(parsed.foundedYear)),
       new PublisherDescription(parsed.description),
-      new PublisherLogoUrl(parsed.logo_url),
-      new PublisherCreatedAt(new Date(parsed.created_at)),
-      new PublisherUpdatedAt(new Date(parsed.updated_at)),
-      new PublisherDeletedAt(parsed.deleted_at ? new Date(parsed.deleted_at) : null),
+      new PublisherLogoUrl(parsed.logoUrl),
+      new PublisherCreatedAt(new Date(parsed.createdAt)),
+      new PublisherUpdatedAt(new Date(parsed.updatedAt)),
+      new PublisherDeletedAt(parsed.deletedAt ? new Date(parsed.deletedAt) : null),
     );
   }
 }

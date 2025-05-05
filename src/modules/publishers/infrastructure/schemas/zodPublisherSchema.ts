@@ -4,13 +4,13 @@ export const publisherSchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(3),
   country: z.string().min(2),
-  website_url: z.string().url().nullable(),
-  founded_year: z.coerce.date(),
+  websiteUrl: z.string().url().nullable(),
+  foundedYear: z.coerce.date(),
   description: z.string().min(10).nullable(),
-  logo_url: z.string().url().nullable(),
-  created_at: z.coerce.date(),
-  updated_at: z.coerce.date(),
-  deleted_at: z.coerce.date().nullable(),
+  logoUrl: z.string().url().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  deletedAt: z.coerce.date().nullable(),
 });
 
 export const publisherSaveSchema = publisherSchema
@@ -18,9 +18,9 @@ export const publisherSaveSchema = publisherSchema
     id: z.string().uuid().optional(),
   })
   .omit({
-    created_at: true,
-    updated_at: true,
-    deleted_at: true,
+    createdAt: true,
+    updatedAt: true,
+    deletedAt: true,
   });
 
 export const publisherIdParamSchema = publisherSchema.pick({
