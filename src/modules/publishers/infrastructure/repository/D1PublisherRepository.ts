@@ -1,3 +1,4 @@
+import type { PublisherDTO } from "@publishers/application/dtos/PublisherDto";
 import { Publisher } from "@publishers/domain/model/Publisher";
 import type { PublisherRepository } from "@publishers/domain/repository/PublisherRepository";
 import { PublisherCountry } from "@publishers/domain/value-objects/PublisherCountry";
@@ -10,7 +11,7 @@ import { PublisherLogoUrl } from "@publishers/domain/value-objects/PublisherLogo
 import { PublisherName } from "@publishers/domain/value-objects/PublisherName";
 import { PublisherUpdatedAt } from "@publishers/domain/value-objects/PublisherUpdatedAt";
 import { PublisherWebsiteUrl } from "@publishers/domain/value-objects/PublisherWebsiteUrl";
-import { type PublisherDTO, publisherSchema } from "@publishers/infrastructure/schemas/zodPublisherSchema";
+import { zodPublisherSchema } from "@publishers/infrastructure/schemas/zodPublisherSchema";
 
 export class D1PublisherRepository implements PublisherRepository {
   constructor(private readonly db: D1Database) {}
@@ -76,7 +77,20 @@ export class D1PublisherRepository implements PublisherRepository {
   }
 
   private mapToDomain(row: PublisherDTO): Publisher {
-    const parsed = publisherSchema.parse(row);
+    const camelCaseRow = {
+      id: row.id,
+      name: row.name,
+      country: row.country,
+      websiteUrl: row.website_url,
+      foundedYear: row.founded_year,
+      description: row.description,
+      logoUrl: row.logo_url,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      deletedAt: row.deleted_at,
+    };
+
+    const parsed = zodPublisherSchema.parse(camelCaseRow);
 
     return new Publisher(
       new PublisherId(parsed.id),

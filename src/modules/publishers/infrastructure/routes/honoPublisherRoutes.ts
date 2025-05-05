@@ -6,7 +6,10 @@ import { ListPublishersController } from "@publishers/infrastructure/controllers
 import { RestorePublisherController } from "@publishers/infrastructure/controllers/RestorePublisherController";
 import { SavePublisherController } from "@publishers/infrastructure/controllers/SavePublisherController";
 import { SoftDeletePublisherController } from "@publishers/infrastructure/controllers/SoftDeletePublisherController";
-import { publisherIdParamSchema, publisherSaveSchema } from "@publishers/infrastructure/schemas/zodPublisherSchema";
+import {
+  zodPublisherIdParamSchema,
+  zodPublisherSaveSchema,
+} from "@publishers/infrastructure/schemas/zodPublisherSchema";
 import type { Hono } from "hono";
 
 const list = new ListPublishersController();
@@ -16,8 +19,8 @@ const deletePublisher = new DeletePublisherController();
 const restore = new RestorePublisherController();
 const softDelete = new SoftDeletePublisherController();
 
-const idValidation = zValidator("param", publisherIdParamSchema);
-const saveValidation = zValidator("json", publisherSaveSchema);
+const idValidation = zValidator("param", zodPublisherIdParamSchema);
+const saveValidation = zValidator("json", zodPublisherSaveSchema);
 
 export const register = (app: Hono<App>): void => {
   app.get("/publishers", list.handle);

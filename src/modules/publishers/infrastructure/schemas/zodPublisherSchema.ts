@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const publisherSchema = z.object({
+export const zodPublisherSchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(3),
   country: z.string().min(2),
@@ -13,7 +13,7 @@ export const publisherSchema = z.object({
   deletedAt: z.coerce.date().nullable(),
 });
 
-export const publisherSaveSchema = publisherSchema
+export const zodPublisherSaveSchema = zodPublisherSchema
   .extend({
     id: z.string().uuid().optional(),
   })
@@ -23,8 +23,6 @@ export const publisherSaveSchema = publisherSchema
     deletedAt: true,
   });
 
-export const publisherIdParamSchema = publisherSchema.pick({
+export const zodPublisherIdParamSchema = zodPublisherSchema.pick({
   id: true,
 });
-
-export type PublisherDTO = z.infer<typeof publisherSchema>;
