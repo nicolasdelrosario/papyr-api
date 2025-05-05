@@ -29,7 +29,7 @@ export class SaveBook {
 
   async execute(book: SaveBookDto): Promise<void> {
     const now = new Date();
-    const bookId = book.id ? new BookId(book.id) : new BookId(crypto.randomUUID());
+    const isUpdate = book.id !== undefined && book.id !== null;
 
     const author = await this.authorRepository.findById(new AuthorId(book.author_id));
     if (!author) throw new AuthorWasNotFound("Author was not found");
@@ -37,46 +37,52 @@ export class SaveBook {
     const publisher = await this.publisherRepository.findById(new PublisherId(book.publisher_id));
     if (!publisher) throw new PublisherWasNotFound("Publisher was not found");
 
-    const existingBook = await this.bookRepository.findById(bookId);
+    if (isUpdate) {
+      const bookId = new BookId(book.id);
+      const existingBook = await this.bookRepository.findById(bookId);
 
-    if (!existingBook) {
-      const newBook = new Book(
+      if (!existingBook) throw new Error("Book was not found");
+      if (!existingBook.isActive()) throw new BookIsNotActive("Book is not active");
+
+      const updatedBook = new Book(
         bookId,
-        new AuthorId(book.author_id),
-        new PublisherId(book.publisher_id),
-        new BookTitle(book.title),
-        new BookDescription(book.description ?? null),
-        new BookIsbn(book.isbn ?? null),
-        new BookPublicationDate(book.publication_date),
-        new BookCoverUrl(book.cover_url ?? null),
-        new BookPages(book.pages),
-        new BookLanguage(book.language),
-        new BookCreatedAt(now),
+        new AuthorId(book.author_id ?? existingBook.authorId.value),
+        new PublisherId(book.publisher_id ?? existingBook.publisherId.value),
+        new BookTitle(book.title ?? existingBook.title.value),
+        new BookDescription(book.description ?? existingBook.description.value),
+        new BookIsbn(book.isbn ?? existingBook.isbn.value),
+        new BookPublicationDate(
+          book.publication_date ? new Date(book.publication_date) : existingBook.publicationDate.value,
+        ),
+        new BookCoverUrl(book.cover_url ?? existingBook.coverUrl.value),
+        new BookPages(book.pages ?? existingBook.pages.value),
+        new BookLanguage(book.language ?? existingBook.language.value),
+        new BookCreatedAt(existingBook.createdAt.value),
         new BookUpdatedAt(now),
-        new BookDeletedAt(null),
+        new BookDeletedAt(existingBook.deletedAt.value),
       );
 
-      return await this.bookRepository.save(newBook);
+      return await this.bookRepository.save(updatedBook);
     }
 
-    if (!existingBook.isActive()) throw new BookIsNotActive("Book is not active");
+    const bookId = new BookId(crypto.randomUUID());
 
-    const updatedBook = new Book(
+    const newBook = new Book(
       bookId,
-      new AuthorId(book.author_id ?? existingBook.authorId.value),
-      new PublisherId(book.publisher_id ?? existingBook.publisherId.value),
-      new BookTitle(book.title ?? existingBook.title.value),
-      new BookDescription(book.description ?? existingBook.description.value),
-      new BookIsbn(book.isbn ?? existingBook.isbn.value),
-      new BookPublicationDate(book.publication_date ?? existingBook.publicationDate.value),
-      new BookCoverUrl(book.cover_url ?? existingBook.coverUrl.value),
-      new BookPages(book.pages ?? existingBook.pages.value),
-      new BookLanguage(book.language ?? existingBook.language.value),
-      new BookCreatedAt(existingBook.createdAt.value),
+      new AuthorId(book.author_id),
+      new PublisherId(book.publisher_id),
+      new BookTitle(book.title),
+      new BookDescription(book.description ?? null),
+      new BookIsbn(book.isbn ?? null),
+      new BookPublicationDate(new Date(book.publication_date)),
+      new BookCoverUrl(book.cover_url ?? null),
+      new BookPages(book.pages),
+      new BookLanguage(book.language),
+      new BookCreatedAt(now),
       new BookUpdatedAt(now),
       new BookDeletedAt(null),
     );
 
-    return await this.bookRepository.save(updatedBook);
+    return await this.bookRepository.save(newBook);
   }
 }

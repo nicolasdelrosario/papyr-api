@@ -1,5 +1,5 @@
 export interface SaveBookDto {
-  id?: string;
+  id: string;
   author_id: string;
   publisher_id: string;
   title: string;
