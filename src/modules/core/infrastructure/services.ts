@@ -7,6 +7,14 @@ import { RestoreAuthor } from "@/modules/authors/application/use-cases/RestoreAu
 import { SaveAuthor } from "@/modules/authors/application/use-cases/SaveAuthor";
 import { SoftDeleteAuthor } from "@/modules/authors/application/use-cases/SoftDeleteAuthor";
 import type { AuthorRepository } from "@/modules/authors/domain/repository/AuthorRepository";
+import { DeleteBook } from "@/modules/books/application/use-cases/DeleteBook";
+import { FindBookById } from "@/modules/books/application/use-cases/FindBookById";
+import { ListBooks } from "@/modules/books/application/use-cases/ListBooks";
+import { RestoreBook } from "@/modules/books/application/use-cases/RestoreBook";
+import { SaveBook } from "@/modules/books/application/use-cases/SaveBook";
+import { SoftDeleteBook } from "@/modules/books/application/use-cases/SoftDeleteBook";
+import type { BookRepository } from "@/modules/books/domain/repository/BookRepository";
+import { D1BookRepository } from "@/modules/books/infrastructure/repository/D1BookRepository";
 import { DeleteGenre } from "@/modules/genres/application/use-cases/DeleteGenre";
 import { FindGenreById } from "@/modules/genres/application/use-cases/FindGenreById";
 import { ListGenres } from "@/modules/genres/application/use-cases/ListGenres";
@@ -42,6 +50,7 @@ export const services = (db: D1Database, jwtSecret: string) => {
   const authorRepository: AuthorRepository = new D1AuthorRepository(db);
   const publisherRepository: PublisherRepository = new D1PublisherRepository(db);
   const genreRepository: GenreRepository = new D1GenreRepository(db);
+  const bookRepository: BookRepository = new D1BookRepository(db);
 
   // services
   const encryptionService = new BcryptEncryptionService();
@@ -84,6 +93,14 @@ export const services = (db: D1Database, jwtSecret: string) => {
       delete: new DeleteGenre(genreRepository),
       restore: new RestoreGenre(genreRepository),
       softDelete: new SoftDeleteGenre(genreRepository),
+    },
+    books: {
+      list: new ListBooks(bookRepository),
+      findById: new FindBookById(bookRepository, authorRepository, publisherRepository),
+      save: new SaveBook(bookRepository, authorRepository, publisherRepository),
+      delete: new DeleteBook(bookRepository),
+      restore: new RestoreBook(bookRepository),
+      softDelete: new SoftDeleteBook(bookRepository),
     },
   };
 };
