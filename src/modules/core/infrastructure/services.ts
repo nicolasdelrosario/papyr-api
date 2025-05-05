@@ -7,6 +7,14 @@ import { RestoreAuthor } from "@/modules/authors/application/use-cases/RestoreAu
 import { SaveAuthor } from "@/modules/authors/application/use-cases/SaveAuthor";
 import { SoftDeleteAuthor } from "@/modules/authors/application/use-cases/SoftDeleteAuthor";
 import type { AuthorRepository } from "@/modules/authors/domain/repository/AuthorRepository";
+import { DeleteGenre } from "@/modules/genres/application/use-cases/DeleteGenre";
+import { FindGenreById } from "@/modules/genres/application/use-cases/FindGenreById";
+import { ListGenres } from "@/modules/genres/application/use-cases/ListGenres";
+import { RestoreGenre } from "@/modules/genres/application/use-cases/RestoreGenre";
+import { SaveGenre } from "@/modules/genres/application/use-cases/SaveGenre";
+import { SoftDeleteGenre } from "@/modules/genres/application/use-cases/SoftDeleteGenre";
+import type { GenreRepository } from "@/modules/genres/domain/repository/GenreRepository";
+import { D1GenreRepository } from "@/modules/genres/infrastructure/repository/D1GenreRepository";
 import { DeletePublisher } from "@/modules/publishers/application/use-cases/DeletePublisher";
 import { FindPublisherById } from "@/modules/publishers/application/use-cases/FindPublisherById";
 import { ListPublishers } from "@/modules/publishers/application/use-cases/ListPublishers";
@@ -33,6 +41,7 @@ export const services = (db: D1Database, jwtSecret: string) => {
   const userRepository: UserRepository = new D1UserRepository(db);
   const authorRepository: AuthorRepository = new D1AuthorRepository(db);
   const publisherRepository: PublisherRepository = new D1PublisherRepository(db);
+  const genreRepository: GenreRepository = new D1GenreRepository(db);
 
   // services
   const encryptionService = new BcryptEncryptionService();
@@ -67,6 +76,14 @@ export const services = (db: D1Database, jwtSecret: string) => {
       delete: new DeletePublisher(publisherRepository),
       restore: new RestorePublisher(publisherRepository),
       softDelete: new SoftDeletePublisher(publisherRepository),
+    },
+    genres: {
+      list: new ListGenres(genreRepository),
+      findById: new FindGenreById(genreRepository),
+      save: new SaveGenre(genreRepository),
+      delete: new DeleteGenre(genreRepository),
+      restore: new RestoreGenre(genreRepository),
+      softDelete: new SoftDeleteGenre(genreRepository),
     },
   };
 };
