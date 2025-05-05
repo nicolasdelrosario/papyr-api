@@ -1,26 +1,24 @@
 import { z } from "zod";
 
-export const genreSchema = z.object({
+export const zodGenreSchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(3),
   description: z.string().min(10).nullable(),
-  created_at: z.coerce.date(),
-  updated_at: z.coerce.date(),
-  deleted_at: z.coerce.date().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  deletedAt: z.coerce.date().nullable(),
 });
 
-export const genreSaveSchema = genreSchema
+export const zodGenreSaveSchema = zodGenreSchema
   .extend({
     id: z.string().uuid().optional(),
   })
   .omit({
-    created_at: true,
-    updated_at: true,
-    deleted_at: true,
+    createdAt: true,
+    updatedAt: true,
+    deletedAt: true,
   });
 
-export const genreIdParamSchema = genreSchema.pick({
+export const zodGenreIdParamSchema = zodGenreSchema.pick({
   id: true,
 });
-
-export type GenreDTO = z.infer<typeof genreSchema>;

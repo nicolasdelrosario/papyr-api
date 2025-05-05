@@ -1,3 +1,4 @@
+import type { GenreDTO } from "@genres/application/dtos/GenreDto";
 import { Genre } from "@genres/domain/model/Genre";
 import type { GenreRepository } from "@genres/domain/repository/GenreRepository";
 import { GenreCreatedAt } from "@genres/domain/value-objects/GenreCreatedAt";
@@ -6,7 +7,7 @@ import { GenreDescription } from "@genres/domain/value-objects/GenreDescription"
 import { GenreId } from "@genres/domain/value-objects/GenreId";
 import { GenreName } from "@genres/domain/value-objects/GenreName";
 import { GenreUpdatedAt } from "@genres/domain/value-objects/GenreUpdatedAt";
-import { type GenreDTO, genreSchema } from "@genres/infrastructure/schemas/zodGenreSchema";
+import { zodGenreSchema } from "@genres/infrastructure/schemas/zodGenreSchema";
 
 export class D1GenreRepository implements GenreRepository {
   constructor(private readonly db: D1Database) {}
@@ -61,15 +62,24 @@ export class D1GenreRepository implements GenreRepository {
   }
 
   private mapToDomain(row: GenreDTO): Genre {
-    const parsed = genreSchema.parse(row);
+    const camelCaseRow = {
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      deletedAt: row.deleted_at,
+    };
+
+    const parsed = zodGenreSchema.parse(camelCaseRow);
 
     return new Genre(
       new GenreId(parsed.id),
       new GenreName(parsed.name),
       new GenreDescription(parsed.description),
-      new GenreCreatedAt(new Date(parsed.created_at)),
-      new GenreUpdatedAt(new Date(parsed.updated_at)),
-      new GenreDeletedAt(parsed.deleted_at ? new Date(parsed.deleted_at) : null),
+      new GenreCreatedAt(new Date(parsed.createdAt)),
+      new GenreUpdatedAt(new Date(parsed.updatedAt)),
+      new GenreDeletedAt(parsed.deletedAt ? new Date(parsed.deletedAt) : null),
     );
   }
 }

@@ -5,7 +5,7 @@ import { ListGenresController } from "@genres/infrastructure/controllers/ListGen
 import { RestoreGenreController } from "@genres/infrastructure/controllers/RestoreGenreController";
 import { SaveGenreController } from "@genres/infrastructure/controllers/SaveGenreController";
 import { SoftDeleteGenreController } from "@genres/infrastructure/controllers/SoftDeleteGenreController";
-import { genreIdParamSchema, genreSaveSchema } from "@genres/infrastructure/schemas/zodGenreSchema";
+import { zodGenreIdParamSchema, zodGenreSaveSchema } from "@genres/infrastructure/schemas/zodGenreSchema";
 import { zValidator } from "@hono/zod-validator";
 import type { Hono } from "hono";
 
@@ -16,8 +16,8 @@ const deleteUser = new DeleteGenreController();
 const restore = new RestoreGenreController();
 const softDelete = new SoftDeleteGenreController();
 
-const idValidation = zValidator("param", genreIdParamSchema);
-const saveValidation = zValidator("json", genreSaveSchema);
+const idValidation = zValidator("param", zodGenreIdParamSchema);
+const saveValidation = zValidator("json", zodGenreSaveSchema);
 
 export const register = (app: Hono<App>): void => {
   app.get("/genres", list.handle);
