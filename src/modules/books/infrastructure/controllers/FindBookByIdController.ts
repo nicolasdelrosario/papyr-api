@@ -1,0 +1,35 @@
+import { BookIsNotActive } from "@books/domain/exceptions/BookIsNotActive";
+import { BookWasNotFound } from "@books/domain/exceptions/BookWasNotFound";
+import * as HttpStatusCodes from "@core/common/httpStatusCodes";
+import * as HttpStatusPhrases from "@core/common/httpStatusPhrases";
+import type { Controller, ControllerResponse } from "@core/infrastructure/Controller";
+import type { App } from "@core/infrastructure/hono/types/App";
+import type { Context, TypedResponse } from "hono";
+import type { StatusCode } from "hono/utils/http-status";
+
+export class FindBookByIdController implements Controller {
+  async handle(c: Context<App>): Promise<Response & TypedResponse<ControllerResponse, StatusCode, "json">> {
+    try {
+      const id = c.req.param("id");
+      const services = c.get("services");
+
+      const { book, author, publisher } = await services.books.findById.execute(id);
+
+      return c.json(
+        {
+          data: { book: book.toPrimitives(), author: author.toPrimitives(), publisher: publisher.toPrimitives() },
+          message: HttpStatusPhrases.OK,
+        },
+        HttpStatusCodes.OK,
+      );
+    } catch (error) {
+      if (error instanceof BookWasNotFound)
+        return c.json({ data: null, message: error.message }, HttpStatusCodes.NOT_FOUND);
+
+      if (error instanceof BookIsNotActive)
+        return c.json({ data: null, message: error.message }, HttpStatusCodes.FORBIDDEN);
+
+      throw error;
+    }
+  }
+}
