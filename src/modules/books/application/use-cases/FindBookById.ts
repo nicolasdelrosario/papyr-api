@@ -1,20 +1,25 @@
-import { AuthorIsNotActive } from "@/modules/authors/domain/exceptions/AuthorIsNotActive";
-import { AuthorWasNotFound } from "@/modules/authors/domain/exceptions/AuthorWasNotFound";
-import type { Author } from "@/modules/authors/domain/model/Author";
-import type { AuthorRepository } from "@/modules/authors/domain/repository/AuthorRepository";
+import { AuthorIsNotActive } from "@authors/domain/exceptions/AuthorIsNotActive";
+import { AuthorWasNotFound } from "@authors/domain/exceptions/AuthorWasNotFound";
+import type { Author } from "@authors/domain/model/Author";
+import type { AuthorRepository } from "@authors/domain/repository/AuthorRepository";
 import { BookIsNotActive } from "@books/domain/exceptions/BookIsNotActive";
 import { BookWasNotFound } from "@books/domain/exceptions/BookWasNotFound";
 import type { Book } from "@books/domain/model/Book";
 import type { BookRepository } from "@books/domain/repository/BookRepository";
 import { BookId } from "@books/domain/value-objects/BookId";
+import { PublisherIsNotActive } from "@publishers/domain/exceptions/PublisherIsNotActive";
+import { PublisherWasNotFound } from "@publishers/domain/exceptions/PublisherWasNotFound";
+import type { Publisher } from "@publishers/domain/model/Publisher";
+import type { PublisherRepository } from "@publishers/domain/repository/PublisherRepository";
 
 export class FindBookById {
   constructor(
     private readonly bookRepository: BookRepository,
     private readonly authorRepository: AuthorRepository,
+    private readonly publisherRepository: PublisherRepository,
   ) {}
 
-  async execute(id: string): Promise<{ book: Book; author: Author }> {
+  async execute(id: string): Promise<{ book: Book; author: Author; publisher: Publisher }> {
     const book = await this.bookRepository.findById(new BookId(id));
 
     if (!book) throw new BookWasNotFound("Book was not found.");
@@ -27,6 +32,12 @@ export class FindBookById {
 
     if (!author.isActive()) throw new AuthorIsNotActive("Author is not active.");
 
-    return { book, author };
+    const publisher = await this.publisherRepository.findById(book.publisherId);
+
+    if (!publisher) throw new PublisherWasNotFound("Publisher was not found");
+
+    if (!publisher.isActive()) throw new PublisherIsNotActive("Publisher is not active");
+
+    return { book, author, publisher };
   }
 }
