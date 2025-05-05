@@ -1,29 +1,27 @@
 import { z } from "zod";
 
-export const userSchema = z.object({
+export const zodUserSchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(3),
   username: z.string().min(3),
   email: z.string().email(),
   password: z.string().min(8),
-  avatar_url: z.string().url().nullable(),
-  created_at: z.coerce.date(),
-  updated_at: z.coerce.date(),
-  deleted_at: z.coerce.date().nullable(),
+  avatarUrl: z.string().url().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  deletedAt: z.coerce.date().nullable(),
 });
 
-export const userSaveSchema = userSchema
+export const zodUserSaveSchema = zodUserSchema
   .extend({
     id: z.string().uuid().optional(),
   })
   .omit({
-    created_at: true,
-    updated_at: true,
-    deleted_at: true,
+    createdAt: true,
+    updatedAt: true,
+    deletedAt: true,
   });
 
-export const userIdParamSchema = userSchema.pick({
+export const zodUserIdParamSchema = zodUserSchema.pick({
   id: true,
 });
-
-export type UserDTO = z.infer<typeof userSchema>;

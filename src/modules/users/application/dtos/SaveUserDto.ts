@@ -4,8 +4,8 @@ export interface SaveUserDto {
   username: string;
   email: string;
   password: string;
-  avatar_url: string | null;
-  created_at: Date;
-  updated_at: Date;
-  deleted_at: Date | null;
+  avatarUrl: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
 }

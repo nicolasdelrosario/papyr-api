@@ -1,3 +1,4 @@
+import type { UserDTO } from "@users/application/dtos/UserDto";
 import { User } from "@users/domain/model/User";
 import type { UserRepository } from "@users/domain/repository/UserRepository";
 import { UserAvatarUrl } from "@users/domain/value-objects/UserAvatarUrl";
@@ -9,7 +10,7 @@ import { UserName } from "@users/domain/value-objects/UserName";
 import { UserPassword } from "@users/domain/value-objects/UserPassword";
 import { UserUpdatedAt } from "@users/domain/value-objects/UserUpdatedAt";
 import { UserUsername } from "@users/domain/value-objects/UserUsername";
-import type { UserDTO } from "@users/infrastructure/schemas/zodUserSchema";
+import { zodUserSchema } from "@users/infrastructure/schemas/zodUserSchema";
 
 export class D1UserRepository implements UserRepository {
   constructor(private readonly db: D1Database) {}
@@ -85,16 +86,30 @@ export class D1UserRepository implements UserRepository {
   }
 
   private mapToDomain(row: UserDTO): User {
+    const camelCaseRow = {
+      id: row.id,
+      name: row.name,
+      username: row.username,
+      email: row.email,
+      password: row.password,
+      avatarUrl: row.avatar_url,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      deletedAt: row.deleted_at,
+    };
+
+    const parsed = zodUserSchema.parse(camelCaseRow);
+
     return new User(
-      new UserId(row.id),
-      new UserName(row.name),
-      new UserUsername(row.username),
-      new UserEmail(row.email),
-      new UserPassword(row.password),
-      new UserAvatarUrl(row.avatar_url),
-      new UserCreatedAt(new Date(row.created_at)),
-      new UserUpdatedAt(new Date(row.updated_at)),
-      new UserDeletedAt(row.deleted_at ? new Date(row.deleted_at) : null),
+      new UserId(parsed.id),
+      new UserName(parsed.name),
+      new UserUsername(parsed.username),
+      new UserEmail(parsed.email),
+      new UserPassword(parsed.password),
+      new UserAvatarUrl(parsed.avatarUrl),
+      new UserCreatedAt(new Date(parsed.createdAt)),
+      new UserUpdatedAt(new Date(parsed.updatedAt)),
+      new UserDeletedAt(parsed.deletedAt ? new Date(parsed.deletedAt) : null),
     );
   }
 }

@@ -6,7 +6,7 @@ import { ListUsersController } from "@users/infrastructure/controllers/ListUsers
 import { RestoreUserController } from "@users/infrastructure/controllers/RestoreUserController";
 import { SaveUserController } from "@users/infrastructure/controllers/SaveUserController";
 import { SoftDeleteUserController } from "@users/infrastructure/controllers/SoftDeleteUserController";
-import { userIdParamSchema, userSaveSchema } from "@users/infrastructure/schemas/zodUserSchema";
+import { zodUserIdParamSchema, zodUserSaveSchema } from "@users/infrastructure/schemas/zodUserSchema";
 import type { Hono } from "hono";
 
 const list = new ListUsersController();
@@ -16,8 +16,8 @@ const deleteUser = new DeleteUserController();
 const restore = new RestoreUserController();
 const softDelete = new SoftDeleteUserController();
 
-const idValidation = zValidator("param", userIdParamSchema);
-const saveValidation = zValidator("json", userSaveSchema);
+const idValidation = zValidator("param", zodUserIdParamSchema);
+const saveValidation = zValidator("json", zodUserSaveSchema);
 
 export const register = (app: Hono<App>): void => {
   app.get("/users", list.handle);
