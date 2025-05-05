@@ -9,6 +9,6 @@ export class BookTitle {
   private validate(title: string): void {
     if (!title || typeof title !== "string") throw new Error("Title must be a valid string");
 
-    if (title.trim().length < 3) throw new Error("Title must be at least 3 non-whitespace characters long");
+    if (title.trim().length <= 2) throw new Error("Title must be at least 2 non-whitespace characters long");
   }
 }

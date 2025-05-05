@@ -9,6 +9,6 @@ export class BookPages {
   private validate(pages: number): void {
     if (!pages || typeof pages !== "number") throw new Error("Pages must be a valid number");
 
-    if (pages < 1) throw new Error("Pages must be at least 1");
+    if (pages <= 1) throw new Error("Pages must be at least 1");
   }
 }

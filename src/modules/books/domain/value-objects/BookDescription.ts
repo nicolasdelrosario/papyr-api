@@ -14,6 +14,6 @@ export class BookDescription {
   private validate(description: string): void {
     if (!description || typeof description !== "string") throw new Error("Description must be a valid string");
 
-    if (description.trim().length < 10) throw new Error("Description must be at least 10 characters long");
+    if (description.trim().length <= 10) throw new Error("Description must be at least 10 characters long");
   }
 }
