@@ -1,15 +1,15 @@
 export interface SaveBookDto {
   id: string;
-  author_id: string;
-  publisher_id: string;
+  authorId: string;
+  publisherId: string;
   title: string;
   description: string | null;
   isbn: string | null;
-  publication_date: Date;
-  cover_url: string | null;
+  publicationDate: Date;
+  coverUrl: string | null;
   pages: number;
   language: string;
-  created_at: Date;
-  updated_at: Date;
-  deleted_at: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
 }

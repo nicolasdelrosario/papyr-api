@@ -92,18 +92,18 @@ export class D1BookRepository implements BookRepository {
 
     return new Book(
       new BookId(parsed.id),
-      new AuthorId(parsed.author_id),
-      new PublisherId(parsed.publisher_id),
+      new AuthorId(parsed.authorId),
+      new PublisherId(parsed.publisherId),
       new BookTitle(parsed.title),
       new BookDescription(parsed.description),
       new BookIsbn(parsed.isbn),
-      new BookPublicationDate(new Date(parsed.publication_date)),
-      new BookCoverUrl(parsed.cover_url),
+      new BookPublicationDate(new Date(parsed.publicationDate)),
+      new BookCoverUrl(parsed.coverUrl),
       new BookPages(parsed.pages),
       new BookLanguage(parsed.language),
-      new BookCreatedAt(new Date(parsed.created_at)),
-      new BookUpdatedAt(new Date(parsed.updated_at)),
-      new BookDeletedAt(parsed.deleted_at ? new Date(parsed.deleted_at) : null),
+      new BookCreatedAt(new Date(parsed.createdAt)),
+      new BookUpdatedAt(new Date(parsed.updatedAt)),
+      new BookDeletedAt(parsed.deletedAt ? new Date(parsed.deletedAt) : null),
     );
   }
 }

@@ -31,10 +31,10 @@ export class SaveBook {
     const now = new Date();
     const isUpdate = book.id !== undefined && book.id !== null;
 
-    const author = await this.authorRepository.findById(new AuthorId(book.author_id));
+    const author = await this.authorRepository.findById(new AuthorId(book.authorId));
     if (!author) throw new AuthorWasNotFound("Author was not found");
 
-    const publisher = await this.publisherRepository.findById(new PublisherId(book.publisher_id));
+    const publisher = await this.publisherRepository.findById(new PublisherId(book.publisherId));
     if (!publisher) throw new PublisherWasNotFound("Publisher was not found");
 
     if (isUpdate) {
@@ -46,15 +46,15 @@ export class SaveBook {
 
       const updatedBook = new Book(
         bookId,
-        new AuthorId(book.author_id ?? existingBook.authorId.value),
-        new PublisherId(book.publisher_id ?? existingBook.publisherId.value),
+        new AuthorId(book.authorId ?? existingBook.authorId.value),
+        new PublisherId(book.publisherId ?? existingBook.publisherId.value),
         new BookTitle(book.title ?? existingBook.title.value),
         new BookDescription(book.description ?? existingBook.description.value),
         new BookIsbn(book.isbn ?? existingBook.isbn.value),
         new BookPublicationDate(
-          book.publication_date ? new Date(book.publication_date) : existingBook.publicationDate.value,
+          book.publicationDate ? new Date(book.publicationDate) : existingBook.publicationDate.value,
         ),
-        new BookCoverUrl(book.cover_url ?? existingBook.coverUrl.value),
+        new BookCoverUrl(book.coverUrl ?? existingBook.coverUrl.value),
         new BookPages(book.pages ?? existingBook.pages.value),
         new BookLanguage(book.language ?? existingBook.language.value),
         new BookCreatedAt(existingBook.createdAt.value),
@@ -69,13 +69,13 @@ export class SaveBook {
 
     const newBook = new Book(
       bookId,
-      new AuthorId(book.author_id),
-      new PublisherId(book.publisher_id),
+      new AuthorId(book.authorId),
+      new PublisherId(book.publisherId),
       new BookTitle(book.title),
       new BookDescription(book.description ?? null),
       new BookIsbn(book.isbn ?? null),
-      new BookPublicationDate(new Date(book.publication_date)),
-      new BookCoverUrl(book.cover_url ?? null),
+      new BookPublicationDate(new Date(book.publicationDate)),
+      new BookCoverUrl(book.coverUrl ?? null),
       new BookPages(book.pages),
       new BookLanguage(book.language),
       new BookCreatedAt(now),
