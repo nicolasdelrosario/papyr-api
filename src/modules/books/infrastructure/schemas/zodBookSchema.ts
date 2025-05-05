@@ -29,5 +29,3 @@ export const zodBookSaveSchema = zodBookSchema
 export const zodBookIdParamSchema = zodBookSchema.pick({
   id: true,
 });
-
-export type BookDTO = z.infer<typeof zodBookSchema>;

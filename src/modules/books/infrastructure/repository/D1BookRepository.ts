@@ -1,5 +1,6 @@
 import { AuthorId } from "@/modules/authors/domain/value-objects/AuthorId";
 import { PublisherId } from "@/modules/publishers/domain/value-objects/PublisherId";
+import type { BookDTO } from "@books/application/dtos/BookDto";
 import { Book } from "@books/domain/model/Book";
 import type { BookRepository } from "@books/domain/repository/BookRepository";
 import { BookCoverUrl } from "@books/domain/value-objects/BookCoverUrl";
@@ -13,7 +14,7 @@ import { BookPages } from "@books/domain/value-objects/BookPages";
 import { BookPublicationDate } from "@books/domain/value-objects/BookPublicationDate";
 import { BookTitle } from "@books/domain/value-objects/BookTitle";
 import { BookUpdatedAt } from "@books/domain/value-objects/BookUpdatedAt";
-import { type BookDTO, zodBookSchema } from "@books/infrastructure/schemas/zodBookSchema";
+import { zodBookSchema } from "@books/infrastructure/schemas/zodBookSchema";
 
 export class D1BookRepository implements BookRepository {
   constructor(private readonly db: D1Database) {}
@@ -88,7 +89,23 @@ export class D1BookRepository implements BookRepository {
   }
 
   private mapToDomain(row: BookDTO): Book {
-    const parsed = zodBookSchema.parse(row);
+    const camelCaseRow = {
+      id: row.id,
+      authorId: row.author_id,
+      publisherId: row.publisher_id,
+      title: row.title,
+      description: row.description,
+      isbn: row.isbn,
+      publicationDate: row.publication_date,
+      coverUrl: row.cover_url,
+      pages: row.pages,
+      language: row.language,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      deletedAt: row.deleted_at ? row.deleted_at : null,
+    };
+
+    const parsed = zodBookSchema.parse(camelCaseRow);
 
     return new Book(
       new BookId(parsed.id),
