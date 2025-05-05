@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-export const loginSchema = z.object({
+export const zodLoginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
 });
 
-export const changePasswordSchema = loginSchema.extend({
-  new_password: z.string().min(8),
+export const zodChangePasswordSchema = zodLoginSchema.extend({
+  newPassword: z.string().min(8),
 });
 
-export type LoginDTO = z.infer<typeof loginSchema>;
-export type ChangePasswordDTO = z.infer<typeof changePasswordSchema>;
+export type LoginDTO = z.infer<typeof zodLoginSchema>;
+export type ChangePasswordDTO = z.infer<typeof zodChangePasswordSchema>;

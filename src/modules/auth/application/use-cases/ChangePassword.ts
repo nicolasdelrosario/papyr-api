@@ -13,7 +13,7 @@ export class ChangePassword {
   ) {}
 
   async execute(credentials: ChangePasswordDTO) {
-    const { email, password, new_password } = credentials;
+    const { email, password, newPassword } = credentials;
 
     const userEmail = new UserEmail(email);
     const user = await this.repository.findByEmail(userEmail);
@@ -25,7 +25,7 @@ export class ChangePassword {
 
     if (!passwordMatches) throw new InvalidCredentials("Invalid Credentials");
 
-    const hashedPassword = await this.service.hash(new UserPassword(new_password));
+    const hashedPassword = await this.service.hash(new UserPassword(newPassword));
 
     await this.repository.changePassword(user.id, new UserPassword(hashedPassword), new UserUpdatedAt(now));
   }
