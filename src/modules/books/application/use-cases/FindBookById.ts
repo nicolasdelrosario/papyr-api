@@ -1,15 +1,13 @@
 import { AuthorIsNotActive } from "@authors/domain/exceptions/AuthorIsNotActive";
 import { AuthorWasNotFound } from "@authors/domain/exceptions/AuthorWasNotFound";
-import type { Author } from "@authors/domain/model/Author";
 import type { AuthorRepository } from "@authors/domain/repository/AuthorRepository";
+import type { FindBookByIdResponseDto } from "@books/application/dtos/FindBookByIdResponseDto";
 import { BookIsNotActive } from "@books/domain/exceptions/BookIsNotActive";
 import { BookWasNotFound } from "@books/domain/exceptions/BookWasNotFound";
-import type { Book } from "@books/domain/model/Book";
 import type { BookRepository } from "@books/domain/repository/BookRepository";
 import { BookId } from "@books/domain/value-objects/BookId";
 import { PublisherIsNotActive } from "@publishers/domain/exceptions/PublisherIsNotActive";
 import { PublisherWasNotFound } from "@publishers/domain/exceptions/PublisherWasNotFound";
-import type { Publisher } from "@publishers/domain/model/Publisher";
 import type { PublisherRepository } from "@publishers/domain/repository/PublisherRepository";
 
 export class FindBookById {
@@ -19,7 +17,7 @@ export class FindBookById {
     private readonly publisherRepository: PublisherRepository,
   ) {}
 
-  async execute(id: string): Promise<{ book: Book; author: Author; publisher: Publisher }> {
+  async execute(id: string): Promise<FindBookByIdResponseDto> {
     const book = await this.bookRepository.findById(new BookId(id));
 
     if (!book) throw new BookWasNotFound("Book was not found.");
@@ -38,6 +36,22 @@ export class FindBookById {
 
     if (!publisher.isActive()) throw new PublisherIsNotActive("Publisher is not active");
 
-    return { book, author, publisher };
+    const bookPrimitives = book.toPrimitives();
+    const authorPrimitives = author.toPrimitives();
+    const publisherPrimitives = publisher.toPrimitives();
+
+    return {
+      book: {
+        ...bookPrimitives,
+        author: {
+          id: authorPrimitives.id,
+          name: authorPrimitives.name,
+        },
+        publisher: {
+          id: publisherPrimitives.id,
+          name: publisherPrimitives.name,
+        },
+      },
+    };
   }
 }

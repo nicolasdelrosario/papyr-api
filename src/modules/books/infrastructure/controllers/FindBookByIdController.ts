@@ -13,11 +13,11 @@ export class FindBookByIdController implements Controller {
       const id = c.req.param("id");
       const services = c.get("services");
 
-      const { book, author, publisher } = await services.books.findById.execute(id);
+      const { book } = await services.books.findById.execute(id);
 
       return c.json(
         {
-          data: { book: book.toPrimitives(), author: author.toPrimitives(), publisher: publisher.toPrimitives() },
+          data: { book },
           message: HttpStatusPhrases.OK,
         },
         HttpStatusCodes.OK,
