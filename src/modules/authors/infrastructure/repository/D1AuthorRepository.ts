@@ -1,3 +1,4 @@
+import type { AuthorDTO } from "@authors/application/dtos/AuthorDto";
 import { Author } from "@authors/domain/model/Author";
 import type { AuthorRepository } from "@authors/domain/repository/AuthorRepository";
 import { AuthorBiography } from "@authors/domain/value-objects/AuthorBiography";
@@ -10,7 +11,7 @@ import { AuthorName } from "@authors/domain/value-objects/AuthorName";
 import { AuthorNationality } from "@authors/domain/value-objects/AuthorNationality";
 import { AuthorPhotoUrl } from "@authors/domain/value-objects/AuthorPhotoUrl";
 import { AuthorUpdatedAt } from "@authors/domain/value-objects/AuthorUpdatedAt";
-import { type AuthorDTO, authorSchema } from "@authors/infrastructure/schemas/zodAuthorSchema";
+import { zodAuthorSchema } from "@authors/infrastructure/schemas/zodAuthorSchema";
 
 export class D1AuthorRepository implements AuthorRepository {
   constructor(private readonly db: D1Database) {}
@@ -76,19 +77,32 @@ export class D1AuthorRepository implements AuthorRepository {
   }
 
   private mapToDomain(row: AuthorDTO): Author {
-    const parsed = authorSchema.parse(row);
+    const camelCaseRow = {
+      id: row.id,
+      name: row.name,
+      biography: row.biography,
+      birthDate: row.birth_date,
+      deathDate: row.death_date,
+      nationality: row.nationality,
+      photoUrl: row.photo_url,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      deletedAt: row.deleted_at,
+    };
+
+    const parsed = zodAuthorSchema.parse(camelCaseRow);
 
     return new Author(
       new AuthorId(parsed.id),
       new AuthorName(parsed.name),
       new AuthorBiography(parsed.biography),
-      new AuthorBirthDate(new Date(parsed.birth_date)),
-      new AuthorDeathDate(parsed.death_date ? new Date(parsed.death_date) : null),
+      new AuthorBirthDate(new Date(parsed.birthDate)),
+      new AuthorDeathDate(parsed.deathDate ? new Date(parsed.deathDate) : null),
       new AuthorNationality(parsed.nationality),
-      new AuthorPhotoUrl(parsed.photo_url),
-      new AuthorCreatedAt(new Date(parsed.created_at)),
-      new AuthorUpdatedAt(new Date(parsed.updated_at)),
-      new AuthorDeletedAt(parsed.deleted_at ? new Date(parsed.deleted_at) : null),
+      new AuthorPhotoUrl(parsed.photoUrl),
+      new AuthorCreatedAt(new Date(parsed.createdAt)),
+      new AuthorUpdatedAt(new Date(parsed.updatedAt)),
+      new AuthorDeletedAt(parsed.deletedAt ? new Date(parsed.deletedAt) : null),
     );
   }
 }

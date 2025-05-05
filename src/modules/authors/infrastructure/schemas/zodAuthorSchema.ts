@@ -1,30 +1,28 @@
 import { z } from "zod";
 
-export const authorSchema = z.object({
+export const zodAuthorSchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(3),
   biography: z.string().min(10).nullable(),
-  birth_date: z.coerce.date(),
-  death_date: z.coerce.date().nullable(),
+  birthDate: z.coerce.date(),
+  deathDate: z.coerce.date().nullable(),
   nationality: z.string().min(3).nullable(),
-  photo_url: z.string().url().nullable(),
-  created_at: z.coerce.date(),
-  updated_at: z.coerce.date(),
-  deleted_at: z.coerce.date().nullable(),
+  photoUrl: z.string().url().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  deletedAt: z.coerce.date().nullable(),
 });
 
-export const authorSaveSchema = authorSchema
+export const zodAuthorSaveSchema = zodAuthorSchema
   .extend({
     id: z.string().uuid().optional(),
   })
   .omit({
-    created_at: true,
-    updated_at: true,
-    deleted_at: true,
+    createdAt: true,
+    updatedAt: true,
+    deletedAt: true,
   });
 
-export const authorIdParamSchema = authorSchema.pick({
+export const zodAuthorIdParamSchema = zodAuthorSchema.pick({
   id: true,
 });
-
-export type AuthorDTO = z.infer<typeof authorSchema>;

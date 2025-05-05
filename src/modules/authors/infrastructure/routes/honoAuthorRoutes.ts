@@ -5,7 +5,7 @@ import { ListAuthorsController } from "@authors/infrastructure/controllers/ListA
 import { RestoreAuthorController } from "@authors/infrastructure/controllers/RestoreAuthorController";
 import { SaveAuthorController } from "@authors/infrastructure/controllers/SaveAuthorController";
 import { SoftDeleteAuthorController } from "@authors/infrastructure/controllers/SoftDeleteAuthorController";
-import { authorIdParamSchema, authorSaveSchema } from "@authors/infrastructure/schemas/zodAuthorSchema";
+import { zodAuthorIdParamSchema, zodAuthorSaveSchema } from "@authors/infrastructure/schemas/zodAuthorSchema";
 import { zValidator } from "@hono/zod-validator";
 import type { Hono } from "hono";
 
@@ -16,8 +16,8 @@ const deleteAuthor = new DeleteAuthorController();
 const restore = new RestoreAuthorController();
 const softDelete = new SoftDeleteAuthorController();
 
-const idValidation = zValidator("param", authorIdParamSchema);
-const saveValidation = zValidator("json", authorSaveSchema);
+const idValidation = zValidator("param", zodAuthorIdParamSchema);
+const saveValidation = zValidator("json", zodAuthorSaveSchema);
 
 export const register = (app: Hono<App>): void => {
   app.get("/authors", list.handle);
