@@ -1,5 +1,8 @@
 import { BookWasNotFound } from "@/modules/books/domain/exceptions/BookWasNotFound";
 import { GenreWasNotFound } from "@/modules/genres/domain/exceptions/GenreWasNotFound";
+import type { SaveBookGenreDTO } from "@bookGenres/application/dtos/SaveBookGenreDto";
+import { BookGenreIsNotActive } from "@bookGenres/domain/exceptions/BookGenreIsNotActive";
+import { BookGenreWasNotFound } from "@bookGenres/domain/exceptions/BookGenreWasNotFound";
 import { BookGenre } from "@bookGenres/domain/model/BookGenre";
 import type { BookGenreRepository } from "@bookGenres/domain/repository/BookGenreRepository";
 import { BookGenreCreatedAt } from "@bookGenres/domain/value-objects/BookGenreCreatedAt";
@@ -10,9 +13,6 @@ import type { BookRepository } from "@books/domain/repository/BookRepository";
 import { BookId } from "@books/domain/value-objects/BookId";
 import type { GenreRepository } from "@genres/domain/repository/GenreRepository";
 import { GenreId } from "@genres/domain/value-objects/GenreId";
-import { BookGenreIsNotActive } from "../../domain/exceptions/BookGenreIsNotActive";
-import { BookGenreWasNotFound } from "../../domain/exceptions/BookGenreWasNotFound";
-import type { SaveBookGenreDTO } from "../dtos/SaveBookGenreDto";
 
 export class SaveBookGenre {
   constructor(
