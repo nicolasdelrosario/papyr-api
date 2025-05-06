@@ -22,4 +22,4 @@ export type FindBookByIdResponseDto = {
       name: string;
     };
   };
-}; 
+};
