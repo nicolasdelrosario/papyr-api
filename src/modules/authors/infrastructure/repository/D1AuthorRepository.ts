@@ -83,13 +83,13 @@ export class D1AuthorRepository implements AuthorRepository {
       new AuthorId(parsed.id),
       new AuthorName(parsed.name),
       new AuthorBiography(parsed.biography),
-      new AuthorBirthDate(new Date(parsed.birthDate)),
-      new AuthorDeathDate(parsed.deathDate ? new Date(parsed.deathDate) : null),
+      new AuthorBirthDate(parsed.birthDate),
+      new AuthorDeathDate(parsed.deathDate),
       new AuthorNationality(parsed.nationality),
       new AuthorPhotoUrl(parsed.photoUrl),
-      new AuthorCreatedAt(new Date(parsed.createdAt)),
-      new AuthorUpdatedAt(new Date(parsed.updatedAt)),
-      new AuthorDeletedAt(parsed.deletedAt ? new Date(parsed.deletedAt) : null),
+      new AuthorCreatedAt(parsed.createdAt),
+      new AuthorUpdatedAt(parsed.updatedAt),
+      new AuthorDeletedAt(parsed.deletedAt),
     );
   }
 }

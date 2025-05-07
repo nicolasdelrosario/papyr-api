@@ -98,13 +98,13 @@ export class D1BookRepository implements BookRepository {
       new BookTitle(parsed.title),
       new BookDescription(parsed.description),
       new BookIsbn(parsed.isbn),
-      new BookPublicationDate(new Date(parsed.publicationDate)),
+      new BookPublicationDate(parsed.publicationDate),
       new BookCoverUrl(parsed.coverUrl),
       new BookPages(parsed.pages),
       new BookLanguage(parsed.language),
-      new BookCreatedAt(new Date(parsed.createdAt)),
-      new BookUpdatedAt(new Date(parsed.updatedAt)),
-      new BookDeletedAt(parsed.deletedAt ? new Date(parsed.deletedAt) : null),
+      new BookCreatedAt(parsed.createdAt),
+      new BookUpdatedAt(parsed.updatedAt),
+      new BookDeletedAt(parsed.deletedAt),
     );
   }
 }

@@ -68,9 +68,9 @@ export class D1GenreRepository implements GenreRepository {
       new GenreId(parsed.id),
       new GenreName(parsed.name),
       new GenreDescription(parsed.description),
-      new GenreCreatedAt(new Date(parsed.createdAt)),
-      new GenreUpdatedAt(new Date(parsed.updatedAt)),
-      new GenreDeletedAt(parsed.deletedAt ? new Date(parsed.deletedAt) : null),
+      new GenreCreatedAt(parsed.createdAt),
+      new GenreUpdatedAt(parsed.updatedAt),
+      new GenreDeletedAt(parsed.deletedAt),
     );
   }
 }

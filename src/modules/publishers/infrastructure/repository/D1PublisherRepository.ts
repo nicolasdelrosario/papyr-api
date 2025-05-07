@@ -89,7 +89,7 @@ export class D1PublisherRepository implements PublisherRepository {
       new PublisherLogoUrl(parsed.logoUrl),
       new PublisherCreatedAt(parsed.createdAt),
       new PublisherUpdatedAt(parsed.updatedAt),
-      new PublisherDeletedAt(parsed.deletedAt ? new Date(parsed.deletedAt) : null),
+      new PublisherDeletedAt(parsed.deletedAt),
     );
   }
 }
