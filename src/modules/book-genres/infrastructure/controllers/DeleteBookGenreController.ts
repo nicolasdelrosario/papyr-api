@@ -1,0 +1,34 @@
+import { BookGenreIsActive } from "@bookGenres/domain/exceptions/BookGenreIsActive";
+import { BookGenreWasNotFound } from "@bookGenres/domain/exceptions/BookGenreWasNotFound";
+import * as HttpStatusCodes from "@core/common/httpStatusCodes";
+import type { Controller, ControllerResponse } from "@core/infrastructure/Controller";
+import type { App } from "@core/infrastructure/hono/types/App";
+import type { Context, TypedResponse } from "hono";
+import type { StatusCode } from "hono/utils/http-status";
+
+export class DeleteBookGenreController implements Controller {
+  async handle(c: Context<App>): Promise<Response & TypedResponse<ControllerResponse, StatusCode, "json">> {
+    try {
+      const id = c.req.param("id");
+      const services = c.get("services");
+
+      await services.bookGenres.delete.execute(id);
+
+      return c.json(
+        {
+          data: null,
+          message: "Book genre relationship was deleted successfully",
+        },
+        HttpStatusCodes.OK,
+      );
+    } catch (error) {
+      if (error instanceof BookGenreWasNotFound)
+        return c.json({ data: null, message: error.message }, HttpStatusCodes.NOT_FOUND);
+
+      if (error instanceof BookGenreIsActive)
+        return c.json({ data: null, message: error.message }, HttpStatusCodes.CONFLICT);
+
+      throw error;
+    }
+  }
+}
