@@ -10,6 +10,4 @@ export interface BookGenreRepository {
   findById(id: BookGenreId): Promise<BookGenre | null>;
   save(bookGenre: BookGenre): Promise<void>;
   delete(id: BookGenreId): Promise<void>;
-  softDelete(id: BookGenreId): Promise<void>;
-  restore(id: BookGenreId): Promise<void>;
 }
