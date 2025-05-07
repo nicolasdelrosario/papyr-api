@@ -77,21 +77,8 @@ export class D1AuthorRepository implements AuthorRepository {
   }
 
   private mapToDomain(row: AuthorDTO): Author {
-    const camelCaseRow = {
-      id: row.id,
-      name: row.name,
-      biography: row.biography,
-      birthDate: row.birth_date,
-      deathDate: row.death_date,
-      nationality: row.nationality,
-      photoUrl: row.photo_url,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at,
-      deletedAt: row.deleted_at,
-    };
-
-    const parsed = zodAuthorSchema.parse(camelCaseRow);
-
+    const parsed = zodAuthorSchema.parse(row);
+  
     return new Author(
       new AuthorId(parsed.id),
       new AuthorName(parsed.name),
