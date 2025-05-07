@@ -12,4 +12,7 @@ CREATE TABLE IF NOT EXISTS books (
     created_at TEXT NOT NULL DEFAULT (datetime ('now')),
     updated_at TEXT NOT NULL DEFAULT (datetime ('now')),
     deleted_at TEXT
+
+    FOREIGN KEY (author_id) REFERENCES authors(id),
+    FOREIGN KEY (publisher_id) REFERENCES publishers(id)
 );
