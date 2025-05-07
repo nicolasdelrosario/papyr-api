@@ -62,16 +62,7 @@ export class D1GenreRepository implements GenreRepository {
   }
 
   private mapToDomain(row: GenreDTO): Genre {
-    const camelCaseRow = {
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at,
-      deletedAt: row.deleted_at,
-    };
-
-    const parsed = zodGenreSchema.parse(camelCaseRow);
+    const parsed = zodGenreSchema.parse(row);
 
     return new Genre(
       new GenreId(parsed.id),
