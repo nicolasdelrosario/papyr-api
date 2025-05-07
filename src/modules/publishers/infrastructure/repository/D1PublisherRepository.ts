@@ -77,31 +77,18 @@ export class D1PublisherRepository implements PublisherRepository {
   }
 
   private mapToDomain(row: PublisherDTO): Publisher {
-    const camelCaseRow = {
-      id: row.id,
-      name: row.name,
-      country: row.country,
-      websiteUrl: row.website_url,
-      foundedYear: row.founded_year,
-      description: row.description,
-      logoUrl: row.logo_url,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at,
-      deletedAt: row.deleted_at,
-    };
-
-    const parsed = zodPublisherSchema.parse(camelCaseRow);
+    const parsed = zodPublisherSchema.parse(row);
 
     return new Publisher(
       new PublisherId(parsed.id),
       new PublisherName(parsed.name),
       new PublisherCountry(parsed.country),
       new PublisherWebsiteUrl(parsed.websiteUrl),
-      new PublisherFoundedYear(new Date(parsed.foundedYear)),
+      new PublisherFoundedYear(parsed.foundedYear),
       new PublisherDescription(parsed.description),
       new PublisherLogoUrl(parsed.logoUrl),
-      new PublisherCreatedAt(new Date(parsed.createdAt)),
-      new PublisherUpdatedAt(new Date(parsed.updatedAt)),
+      new PublisherCreatedAt(parsed.createdAt),
+      new PublisherUpdatedAt(parsed.updatedAt),
       new PublisherDeletedAt(parsed.deletedAt ? new Date(parsed.deletedAt) : null),
     );
   }
