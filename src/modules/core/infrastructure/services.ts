@@ -7,6 +7,15 @@ import { RestoreAuthor } from "@/modules/authors/application/use-cases/RestoreAu
 import { SaveAuthor } from "@/modules/authors/application/use-cases/SaveAuthor";
 import { SoftDeleteAuthor } from "@/modules/authors/application/use-cases/SoftDeleteAuthor";
 import type { AuthorRepository } from "@/modules/authors/domain/repository/AuthorRepository";
+import { DeleteBookGenre } from "@/modules/book-genres/application/use-cases/DeleteBookGenre";
+import { FindBookGenreById } from "@/modules/book-genres/application/use-cases/FindBookGenreById";
+import { ListBookGenres } from "@/modules/book-genres/application/use-cases/ListBookGenres";
+import { ListBooksByGenreId } from "@/modules/book-genres/application/use-cases/ListBooksByGenreId";
+import { ListGenresByBookId } from "@/modules/book-genres/application/use-cases/ListGenresByBookId";
+import { RestoreBookGenre } from "@/modules/book-genres/application/use-cases/RestoreBookGenre";
+import { SaveBookGenre } from "@/modules/book-genres/application/use-cases/SaveBookGenre";
+import { SoftDeleteBookGenre } from "@/modules/book-genres/application/use-cases/SoftDeleteBookGenre";
+import type { BookGenreRepository } from "@/modules/book-genres/domain/repository/BookGenreRepository";
 import { DeleteBook } from "@/modules/books/application/use-cases/DeleteBook";
 import { FindBookById } from "@/modules/books/application/use-cases/FindBookById";
 import { ListBooks } from "@/modules/books/application/use-cases/ListBooks";
@@ -41,6 +50,7 @@ import { SaveUser } from "@/modules/users/application/use-cases/SaveUser";
 import { SoftDeleteUser } from "@/modules/users/application/use-cases/SoftDeleteUser";
 import { BcryptEncryptionService } from "@auth/infrastructure/services/BcryptEncryptionService";
 import { D1AuthorRepository } from "@authors/infrastructure/repository/D1AuthorRepository";
+import { D1BookGenreRepository } from "@bookGenres/infrastructure/repository/D1BookGenreRepository";
 import type { UserRepository } from "@users/domain/repository/UserRepository";
 import { D1UserRepository } from "@users/infrastructure/repository/D1UserRepository";
 
@@ -51,6 +61,7 @@ export const services = (db: D1Database, jwtSecret: string) => {
   const publisherRepository: PublisherRepository = new D1PublisherRepository(db);
   const genreRepository: GenreRepository = new D1GenreRepository(db);
   const bookRepository: BookRepository = new D1BookRepository(db);
+  const bookGenreRepository: BookGenreRepository = new D1BookGenreRepository(db);
 
   // services
   const encryptionService = new BcryptEncryptionService();
@@ -101,6 +112,16 @@ export const services = (db: D1Database, jwtSecret: string) => {
       delete: new DeleteBook(bookRepository),
       restore: new RestoreBook(bookRepository),
       softDelete: new SoftDeleteBook(bookRepository),
+    },
+    bookGenres: {
+      list: new ListBookGenres(bookGenreRepository),
+      listBooksByGenreId: new ListBooksByGenreId(bookGenreRepository),
+      listGenresByBookId: new ListGenresByBookId(bookGenreRepository),
+      findById: new FindBookGenreById(bookGenreRepository),
+      save: new SaveBookGenre(bookGenreRepository, bookRepository, genreRepository),
+      delete: new DeleteBookGenre(bookGenreRepository),
+      restore: new RestoreBookGenre(bookGenreRepository),
+      softDelete: new SoftDeleteBookGenre(bookGenreRepository),
     },
   };
 };
