@@ -18,6 +18,12 @@ export const zodBookGenreSchema = zodBookGenreDbSchema.transform((row) => ({
   deletedAt: row.deleted_at,
 }));
 
+export const zodBookGenreSaveSchema = z.object({
+  id: z.string().uuid().optional(),
+  bookId: z.string().uuid(),
+  genreId: z.string().uuid(),
+});
+
 export const zodBookGenreIdParamSchema = z.object({
   id: z.string().uuid(),
 });
