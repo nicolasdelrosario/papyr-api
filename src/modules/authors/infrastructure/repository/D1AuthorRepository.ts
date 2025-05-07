@@ -78,7 +78,7 @@ export class D1AuthorRepository implements AuthorRepository {
 
   private mapToDomain(row: AuthorDTO): Author {
     const parsed = zodAuthorSchema.parse(row);
-  
+
     return new Author(
       new AuthorId(parsed.id),
       new AuthorName(parsed.name),
