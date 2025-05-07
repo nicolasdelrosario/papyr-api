@@ -86,19 +86,7 @@ export class D1UserRepository implements UserRepository {
   }
 
   private mapToDomain(row: UserDTO): User {
-    const camelCaseRow = {
-      id: row.id,
-      name: row.name,
-      username: row.username,
-      email: row.email,
-      password: row.password,
-      avatarUrl: row.avatar_url,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at,
-      deletedAt: row.deleted_at,
-    };
-
-    const parsed = zodUserSchema.parse(camelCaseRow);
+    const parsed = zodUserSchema.parse(row);
 
     return new User(
       new UserId(parsed.id),
@@ -107,9 +95,9 @@ export class D1UserRepository implements UserRepository {
       new UserEmail(parsed.email),
       new UserPassword(parsed.password),
       new UserAvatarUrl(parsed.avatarUrl),
-      new UserCreatedAt(new Date(parsed.createdAt)),
-      new UserUpdatedAt(new Date(parsed.updatedAt)),
-      new UserDeletedAt(parsed.deletedAt ? new Date(parsed.deletedAt) : null),
+      new UserCreatedAt(parsed.createdAt),
+      new UserUpdatedAt(parsed.updatedAt),
+      new UserDeletedAt(parsed.deletedAt),
     );
   }
 }
