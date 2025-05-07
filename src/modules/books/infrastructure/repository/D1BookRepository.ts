@@ -89,23 +89,7 @@ export class D1BookRepository implements BookRepository {
   }
 
   private mapToDomain(row: BookDTO): Book {
-    const camelCaseRow = {
-      id: row.id,
-      authorId: row.author_id,
-      publisherId: row.publisher_id,
-      title: row.title,
-      description: row.description,
-      isbn: row.isbn,
-      publicationDate: row.publication_date,
-      coverUrl: row.cover_url,
-      pages: row.pages,
-      language: row.language,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at,
-      deletedAt: row.deleted_at ? row.deleted_at : null,
-    };
-
-    const parsed = zodBookSchema.parse(camelCaseRow);
+    const parsed = zodBookSchema.parse(row);
 
     return new Book(
       new BookId(parsed.id),
